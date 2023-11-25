@@ -61,11 +61,14 @@ Arguments: Replace `YOUR_OPENAI_API_KEY` with your personal key.
 
 ### 3\. Experiment design:
 
-"MacBehaviour" can implement an experiment in two types of designs. A multiple-trials-per-run design resembles typical psychological experiments, where a human participant encounters multiple trials in an experiment. Here, you present multiple experimental trials, one by one, to an LLM in a single conversation. Note that earlier input and output will serve as the context for a current trial. In a one-trial-per-run design, you only present a single trial of prompt and stimulus to an LLM in a conversation, and you present another trial in a new conversation.
+"MacBehaviour" can implement an experiment in two types of designs. 
+**1) multiple-trials-per-run design** resembles typical psychological experiments, where a human participant encounters multiple trials in an experiment. Here, you present multiple experimental trials, one by one, to an LLM in a single conversation. Note that earlier input and output will serve as the context for a current trial. 
+**2) one-trial-per-run design**, you only present a single trial of prompt and stimulus to an LLM in a conversation, and you present another trial in a new conversation.
 
 To illustrate these designs and how to construct the experimental stimuli, we next use a demo experiment. Cassidy et al. (1999) showed that speakers of English can infer the gender of novel personal names from phonology. In particular, when asked to complete a sentence fragment (e.g., *After Corlak/Corla went to bed …*), people tend to use a masculine pronoun for names ending in a closed syllable (e.g., *Corlak*) but a feminine pronoun for those ending in an open syllable (e.g., *Corla*). Cai et al. (2023) replicated the experiment with ChatGPT and Vicuna and obtained a similar phonology-gender association in these LLMs. In the following parts, we show how to use the "MacBehaviour" package, using this experiment as an example. Following Cai et al. (2023), in our demo, we ask an LLM to complete sentence fragments and observe how the model refers to the novel personal name (e.g., using masculine pronouns such as *he/him/his* or feminine ones such as *she/her/hers*).
 
-1. In the **multiple-trials-per-run design**,Before using this package, users should prepare one Excel file/data frame containing the experimental stimuli and other information for experiment design (see Table 3). The Excel file/data frame should exhibit a structured format, defining columns for "Run", "Item", "Condition", and "Prompt", with each row standing for a unique stimulus (see Table 3 for a description of these terms and Table 4 for an example). This organization is pivotal for keeping the integrity of the experimental design, ensuring each stimulus is correctly identified and presented as your experiment design during the experiment.
+1. **multiple-trials-per-run design**,
+Before using this package, users should prepare one Excel file/data frame containing the experimental stimuli and other information for experiment design (see Table 3). The Excel file/data frame should exhibit a structured format, defining columns for "Run", "Item", "Condition", and "Prompt", with each row standing for a unique stimulus (see Table 3 for a description of these terms and Table 4 for an example). This organization is pivotal for keeping the integrity of the experimental design, ensuring each stimulus is correctly identified and presented as your experiment design during the experiment.
 
    **Table 3**. The data frame structure 
 
@@ -123,9 +126,9 @@ To illustrate these designs and how to construct the experimental stimuli, we ne
 
     
 
-2. In the **one-trial-per-run design**, 
+2. **one-trial-per-run design**
 
-3. In the one-trial-per-run design, an LLM will be presented only one trial of the experiment in a Run/conversation. In our demo experiment (see Table 5), for instance, each conversation with the LLM involves only one stimulus. In this design, each stimulus is given a unique Run number, indicating that each one is to be presented in a separate conversation with the LLM. This design eliminates the potential for previous context to influence the response of current stimulus, ensuring that each stimulus is evaluated independently.
+    In the one-trial-per-run design, an LLM will be presented only one trial of the experiment in a Run/conversation. In our demo experiment (see Table 5), for instance, each conversation with the LLM involves only one stimulus. In this design, each stimulus is given a unique Run number, indicating that each one is to be presented in a separate conversation with the LLM. This design eliminates the potential for previous context to influence the response of current stimulus, ensuring that each stimulus is evaluated independently.
 
     
 
@@ -184,17 +187,17 @@ Arguments: This function prepares the stimuli from your Excel data.
 
 Each argument of the `loadData` function maps to a specific column in the provided Excel spreadsheet/data frame, ensuring that the data's integrity is preserved and appropriately structured for the experiment's needs:
 
-1. The "runList", a numeric vector, corresponds to the "Run" column in the Excel file, which indicates the index of the conversation/Run.
+1) The "runList", a numeric vector, corresponds to the "Run" column in the Excel file, which indicates the index of the conversation/Run.
 
-2. The "runList", a numeric vector, corresponds to the "Run" column in the Excel file, which indicates the index of the conversation/Run.
+2) The "runList", a numeric vector, corresponds to the "Run" column in the Excel file, which indicates the index of the conversation/Run.
 
-3. The "itemIDList", a numeric vector, refers to the "Item" column, indicating the item index of your stimuli. This is for the researcher's reference and does not interact with the model's operation.
+3) The "itemIDList", a numeric vector, refers to the "Item" column, indicating the item index of your stimuli. This is for the researcher's reference and does not interact with the model's operation.
 
-4. The "conditionList", a numeric/character vector, represents the "Condition" column, which specifies the experimental condition associated with each stimulus. Similar to "itemIDList", it is for the researcher's reference and does not interact with the model's operation.
+4) The "conditionList", a numeric/character vector, represents the "Condition" column, which specifies the experimental condition associated with each stimulus. Similar to "itemIDList", it is for the researcher's reference and does not interact with the model's operation.
 
-5. The "promptList", a character vector, argument maps to the "Prompt" column, which contains the actual prompts that will be presented to the model during the experiment. Each element under this column is a unique prompt that the language model will process and respond to.
+5) The "promptList", a character vector, argument maps to the "Prompt" column, which contains the actual prompts that will be presented to the model during the experiment. Each element under this column is a unique prompt that the language model will process and respond to.
 
-   The output of this function, "ExperimentItem", is a data frame generated by "loadData", which includes all the necessary details for each stimulus. The accuracy of "loadData" in mapping the Excel spreadsheet/data frame to the "ExperimentItem" is important, as it ensures that each stimulus is precisely presented according to the experimental design, thereby guaranteeing the validity and reliability of the experimental results.
+6) The output of this function, "ExperimentItem", is a data frame generated by "loadData", which includes all the necessary details for each stimulus. The accuracy of "loadData" in mapping the Excel spreadsheet/data frame to the "ExperimentItem" is important, as it ensures that each stimulus is precisely presented according to the experimental design, thereby guaranteeing the validity and reliability of the experimental results.
 
    Next, the "experimentDesign" function allows users to define the structure and sequence of the experimental Runs (conversation):
 
