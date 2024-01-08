@@ -10,11 +10,14 @@
 <div id="header">
 
 
-# MacBehaviour R package Tutorial
+# MacBehaviour: Conduct Psychological Experiments on LLMs
 
 </div>
 
-The `MacBehaviour` R package offers a user-friendly toolkit for norming experimental stimuli, and replicating classic experiments. The package provides a suite of functions tailored for experiments with LLMs, including those from OpenAI's GPT series, Llama 2 Chat series in Huggingface, and open-source models.
+
+The `MacBehaviour` R package offers a user-friendly toolkit for norming experimental stimuli, and replicating classic experiments on Large langauge models(LLMs). The package provides a suite of functions tailored for experiments with LLMs, including those from OpenAI's GPT series, Llama 2 Chat series in Huggingface, and open-source models.
+
+For details and citation, please see the preprint: Duan, X., Li, S., & Cai, Z. G. (2023, November 24). MacBehaviour: An R package for behavioural experimentation on large language models. https://doi.org/10.31234/osf.io/ywtfd
 
 <div id="installing-and-loading-necessary-packages" class="section level3">
 
