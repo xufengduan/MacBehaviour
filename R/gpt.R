@@ -1,0 +1,432 @@
+#' Internal function to interact with llama2
+#'
+#' This internal function sends requests to the Huggingface API, initiating a conversation with llama2 . It uses specified parameters for the llama model.
+#' @import httr
+#' @import rjson
+#' @param messages A character strings that users want to send to llama
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A  character strings containing the llama's responses.
+#' @noRd
+llama_chat <- function(
+    messages="hi",
+    ...
+){
+
+  if (is.null(Sys.getenv("key"))) {
+    stop("API key is not set.")
+  }
+
+  headers <- c(
+    'Authorization' = paste('Bearer', Sys.getenv("key")),
+    'Content-Type' = 'application/json'
+  )
+
+  body <- list(
+    inputs = messages,
+    parameters = modifyList(list(return_full_text = FALSE), list(...)),
+    options = list(
+      use_cache = FALSE
+    )
+  )
+
+
+  tryCatch({
+
+    res <- POST(
+      url = Sys.getenv("url"),
+      body = body,
+      add_headers(headers),
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+
+
+    if(res$status_code != 200){
+      response_content = paste("error with code:",res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(handle_error_code(res$status_code))
+    }
+    response_text <- content(res, 'text', encoding = "UTF-8")
+
+    generated_text <-  content(res)[[1]]$generated_text
+    content_list <- trimws(generated_text)
+
+  }, warning = function(war) {
+
+    message(paste("Caught warning:", war$message))
+
+  }, error = function(err) {
+
+
+    stop(err)
+
+  })
+
+  result_list <- list(content_list = list(content_list), raw_response = response_text)
+  return(result_list)
+
+}
+
+
+
+#' Internal function to interact with ChatGPT
+#'
+#' This internal function sends requests to the OpenAI API, initiating a conversation with ChatGPT. It uses specified parameters for the ChatGPT model.
+#' @import httr
+#' @import rjson
+#' @param messages A list of character strings that users want to send to ChatGPT.
+#' @param model A character string specifying the model of GPT (e.g., "gpt-3.5-turbo").
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using, such as n=2 / logprobs=TRUE... Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A list of character strings containing the ChatGPT's responses.
+#' @noRd
+openai_chat <- function(
+    messages = list(),
+    model = "gpt-4",
+    ...
+){
+  if (is.null(Sys.getenv("key"))) {
+    stop("API key is not set.")
+  }
+
+  headers <- c(
+    'Authorization' = paste('Bearer', Sys.getenv("key")),
+    'Content-Type' = 'application/json'
+  )
+
+  args <- list(
+    messages = messages,
+    model = model
+  )
+
+  tryCatch({
+
+    res <- POST(
+      url = Sys.getenv("url"),
+      body = modifyList(args, list(...)),
+      add_headers(headers),
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+
+    if(res$status_code != 200){
+      response_content = paste("error with code:",res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(handle_error_code(res$status_code))
+    }
+
+    response_text <- content(res, 'text', encoding = "UTF-8")
+
+    res_json <- rjson::fromJSON(response_text)
+
+    choices <- res_json$choices
+
+    content_list <- sapply(choices, function(x) x$message$content)
+  }, warning = function(war) {
+    message(paste("Caught warning:", war$message))
+  }, error = function(err) {
+    stop(err)
+  })
+
+  result_list <- list(content_list = content_list, raw_response = response_text)
+  return(result_list)
+}
+
+
+
+#' Internal function to interact with claude
+#'
+#' This internal function sends requests to the claude API, initiating a conversation with claude. It uses specified parameters for the claude model.
+#' @import httr
+#' @import rjson
+#' @param messages A list of character strings that users want to send to claude.
+#' @param model A character string specifying the model of claude (e.g., "claude-3-sonnet-20240229").
+#' @param version When using the Claude model, the version parameter required defaults to "2023-06-01".
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A list of character strings containing the claude's responses.
+#' @noRd
+claude_chat <- function(
+  messages = list(),
+  model = "claude-3-sonnet-20240229",
+  version = "2023-06-01",
+  ...
+){
+
+  if (is.null(Sys.getenv("key"))) {
+    stop("API key is not set.")
+  }
+
+
+
+
+  headers <- c(
+    'x-api-key' = Sys.getenv("key"),
+    'anthropic-version' = version,
+    'Content-Type' = 'application/json'
+  )
+
+  args <- list(
+    messages = messages,
+    model = model
+  )
+
+
+  tryCatch({
+
+    res <- POST(
+      url = Sys.getenv("url"),
+      body = modifyList(args, list(...)),
+      add_headers(headers),
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+    if(res$status_code != 200){
+      response_content = paste("error with code:",res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(handle_error_code(res$status_code))
+    }
+
+
+    response_text <- content(res, 'text', encoding = "UTF-8")
+
+    res_json <- rjson::fromJSON(response_text)
+
+
+    content <- res_json$content
+
+    content_text <- content[[1]]$text
+
+
+
+  }, warning = function(war) {
+    message(paste("Caught warning:", war$message))
+
+  }, error = function(err) {
+
+    stop(err)
+
+  })
+
+  result_list <- list(content_list = list(content_text), raw_response = response_text)
+  return(result_list)
+}
+
+
+#' Internal function to interact with gemini
+#'
+#' This internal function sends requests to the gemini API, initiating a conversation with gemini. It uses specified parameters for the gemini model.
+#' @import httr
+#' @import rjson
+#' @param messages A list of character strings that users want to send to gemini.
+#' @param Retrieve the model from the environment variables
+#' @param version When using the gemini model, the version parameter required defaults to "2023-06-01".
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A list of character strings containing the gemini's responses.
+#' @noRd
+gemini_chat <- function(
+  messages = list(),
+  model = Sys.getenv("model"),
+  ...
+){
+
+  if (is.null(Sys.getenv("key"))) {
+    stop("API key is not set.")
+  }
+
+  generationConfig = list(...)
+
+  body <- list(
+    contents = messages,
+    model=model,
+    generationConfig = generationConfig
+  )
+
+
+  current_url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/",model,":generateContent?key=",Sys.getenv("key"))
+  # "http://chat.cuhklpl.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCblcTdxArJNs8g-LvNaFLeQthRojqrUjY"
+  tryCatch({
+
+    res <- POST(
+      url = current_url,
+      body = body,
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+
+
+    if(res$status_code != 200){
+      response_content = paste("error with code:",res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(handle_error_code(res$status_code))
+    }
+
+    response_text <- content(res, 'text', encoding = "UTF-8")
+
+    res_json <- rjson::fromJSON(response_text)
+
+    if(!is.null(res_json$candidates[[1]]$finishReason)){
+      if(res_json$candidates[[1]]$finishReason=="MAX_TOKENS"){
+        stop("over max tokens limited")
+      }
+    }
+
+    if(!is.null(res_json$promptFeedback$blockReason)) {
+      content_text<-"Prompt Safety Error!"
+    }
+    else{
+      content <- res_json$candidates[[1]]$content
+      parts <- content$parts
+      content_text <- parts[[1]]$text
+    }
+
+
+
+
+  }, warning = function(war) {
+    message(paste("Caught warning:", war$message))
+
+  }, error = function(err) {
+
+    stop(err)
+
+  })
+
+  result_list <- list(content_list = list(content_text), raw_response = response_text)
+  return(result_list)
+
+}
+
+#' Internal function to interact with baichuan
+#'
+#' This internal function sends requests to the baichuan API, initiating a conversation with baichuan. It uses specified parameters for the baichuan model.
+#' @import httr
+#' @import rjson
+#' @param messages A list of character strings that users want to send to baichuan.
+#' @param model A character string specifying the model of baichuan (e.g., "Baichuan2-Turbo").
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A list of character strings containing the baichuan's responses.
+#' @noRd
+baichuan_chat <- function(
+  messages = list(),
+  model = "Baichuan2-Turbo",
+  ...
+){
+
+  if (is.null(Sys.getenv("key"))) {
+    stop("API key is not set.")
+  }
+
+  headers <- c(
+    'Authorization' = paste('Bearer', Sys.getenv("key")),
+    'Content-Type' = 'application/json'
+  )
+
+  args <- list(
+    messages = messages,
+    model = model
+  )
+
+  tryCatch({
+
+    res <- POST(
+      url = Sys.getenv("url"),
+      body = modifyList(args, list(...)),
+      add_headers(headers),
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+
+    if(res$status_code != 200){
+      response_content = paste("error with code:",res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(handle_error_code(res$status_code))
+    }
+
+    response_text <- content(res, 'text', encoding = "UTF-8")
+
+    res_json <- rjson::fromJSON(response_text)
+
+    choices <- res_json$choices
+
+    content_list <- sapply(choices, function(x) x$message$content)
+
+  }, warning = function(war) {
+    message(paste("Caught warning:", war$message))
+
+  }, error = function(err) {
+
+    stop(err)
+
+  })
+
+  result_list <- list(content_list = content_list, raw_response = response_text)
+  return(result_list)
+
+}
+
+#' Internal function to interact with openai completion api
+#'
+#' This internal function sends requests to the OpenAI Completion API, initiating a conversation with ChatGPT. It uses specified parameters for the ChatGPT model.
+#' @import httr
+#' @import rjson
+#' @param messages A list of character strings that users want to send to ChatGPT.
+#' @param model A character string specifying the model of GPT (e.g., "gpt-3.5-turbo-instruct").
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using, such as  logprobs=2... Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A list of character strings containing the ChatGPT's responses.
+#' @noRd
+openai_completion <- function(
+  messages = list(),
+  model = "gpt-3.5-turbo-instruct",
+  ...
+){
+  if (is.null(Sys.getenv("key"))) {
+    stop("API key is not set.")
+  }
+
+  headers <- c(
+    'Authorization' = paste('Bearer', Sys.getenv("key")),
+    'Content-Type' = 'application/json'
+  )
+
+  args <- list(
+    prompt = rjson::toJSON(messages),
+    model = model
+  )
+
+  tryCatch({
+
+    res <- POST(
+      url = Sys.getenv("url"),
+      body = modifyList(args, list(...)),
+      add_headers(headers),
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+
+    if(res$status_code != 200){
+      response_content = paste("error with code:",res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(handle_error_code(res$status_code))
+    }
+
+    response_text <- content(res, 'text', encoding = "UTF-8")
+
+    res_json <- rjson::fromJSON(response_text)
+
+    choices <- res_json$choices
+
+    content_list <- sapply(choices, function(x) x$text)
+  }, warning = function(war) {
+    message(paste("Caught warning:", war$message))
+  }, error = function(err) {
+    stop(err)
+  })
+
+  result_list <- list(content_list = content_list, raw_response = response_text)
+  return(result_list)
+}
