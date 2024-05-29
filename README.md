@@ -18,8 +18,9 @@
 The `MacBehaviour` R package offers a user-friendly toolkit for norming experimental stimuli, and replicating classic experiments on Large langauge models(LLMs). The package provides a suite of functions tailored for experiments with LLMs, including those from OpenAI's GPT series, Llama 2 Chat series in Huggingface, and open-source models.
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
-
+<br><br>The version available from the CRAN maybe out of date, but you can find the corresponding tutorial from <a href="https://doi.org/10.31234/osf.io/ywtfd">here.</a>
 <div id="installing-and-loading-necessary-packages" class="section level3">
+
 
 
 ### 1\. Install and load package:
@@ -53,9 +54,10 @@ Arguments: Replace `YOUR_OPENAI_API_KEY` with your personal key.
 
 1) The "api_key" argument in this function requires your personal API key from OpenAI or Hugging Face. Please fill "NA", if you are using a self-deployed model. API enables authenticated access to language models. Researchers interested in obtaining OpenAI API key should first sign up on the OpenAI platform (https://platform.openai.com/). After registration, navigate to your account settings where you can generate your personal API key. Similarly, for integrating Hugging Face models into your research, an API key specific to Hugging Face is required. This can be obtained by creating an account on the Hugging Face platform (https://huggingface.co/). Once you are logged in, access your account settings, and find the "access token" to generate your Hugging Face API key. Please note that as the model inference needs GPUs, you may need to pay inference cost to OpenAI (https://openai.com/pricing) or Hugging Face (https://huggingface.co/blog/inference-pro) for using Llama-2-chat-hf series.
 
-2) The "api_url" argument specifies the interface domain of the selected model. For experiments using GPT series, use the URL: "https://api.openai.com/v1/chat/completions" as documented in OpenAI's API reference (https://platform.openai.com/docs/api-reference/authentication). For Llama-2-chat-hf models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as "https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf ". For self-deployed model, please fill this argument with your local URL (Please find more information at https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md).
+2) The "api_url" argument, a character vector, specifies the interface domain of the selected model. For experiments using the GPT family, the URLs are documented in OpenAI's API reference (https://platform.openai.com/docs/api-reference/authentication). For Llama-2 models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md).
+Here, users can modify how a language model generates responses by adjusting the "api_url". There are two modes for generating output from an LLM: "text completion" and "chat completion" (for details, please see https://platform.openai.com/docs/guides/text-generation/chat-completions-vs-completions). The "text completion" mode requires only a preamble as input, after which the model autonomously generates the remaining text (for GPT-3.5, the api_url for text completion is "https://api.openai.com/v1/completions"; "http://localhost:8000/v1/chat/completions" for self-hosted models). Conversely, "chat completion" is a mode for constructing a conversation between a human user and the language model assistant. Therefore, this approach requires a clear definition of roles (assistant vs. user) and a specific prompt for the model to follow for a task (e.g., "Please complete the following preamble..." for text completion). To engage GPT-3.5 in chat completion mode, use the URL https://api.openai.com/v1/chat/completions. For the self-hosted model, access "http://localhost:8000/v1/completions".
 
-3) The "model" argument, a character vector, ensures the experiment is conducted using the desired model. You can find the list of available model indexes here: (https://platform.openai.com/account/limits). For Llama-2-chat-hf series, please put in "Llama2". For self-deployed models, you can find the model's name at model’s corresponding repository (for a summary, see https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md).
+3) The "model" argument, a character vector, specifies the index of the selected model. For OpenAI models, you can find the list of available model indexes here: (https://platform.openai.com/account/limits). For self-hosted models, users can find the model's name at the model’s corresponding repository (for a summary, see https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md).
 
 </div>
 
@@ -183,35 +185,34 @@ The "read.xlsx" function from the "openxlsx" package reads the Excel file, conve
 The `read.xlsx` function from the `openxlsx` package reads the file, converting it into a data frame within R. To accurately use the stimuli within the R environment, the `loadData` function is utilized, which translates the structured data from an Excel file/data frame into an organized data frame within R:
 
 ```r
-ExperimentItem = loadData(runList=df$Run, itemIDList=df$Item, conditionList=df$Condition, promptList=df$Prompt)
+ExperimentItem = loadData(runList=df$Run, itemList=df$Item, conditionList=df$Condition, promptList=df$Prompt)
 ```
 
 Arguments: This function prepares the stimuli from your Excel data.
 
-Each argument of the `loadData` function maps to a specific column in the provided Excel spreadsheet/data frame, ensuring that the data's integrity is preserved and appropriately structured for the experiment's needs:
+The "loadData" function maps vectors or data frame columns to specific keywords. These keywords are then recognized by subsequent functions in our framework. This mapping streamlines the automatic identification and processing of relevant data collection:
 
-1) The "runList", a numeric vector, corresponds to the "Run" column in the Excel file, which indicates the index of the conversation/Run.
+1) The "runList", required, a numeric vector, matches the column for "Run" in the CSV file and denotes the conversation/run index. It is utilized in loops for interactions with LLMs. The vector's name (e.g., df$Run) can be arbitrary; what's important is the content specified by users for the runList. This applies to subsequent parameters in this function as well.
 
-2) The "runList", a numeric vector, corresponds to the "Run" column in the Excel file, which indicates the index of the conversation/Run.
+2) The "itemList", required, a numeric vector, refers to the column for "Item", indicating the item index of stimuli. This is for the researcher's reference and does not interact with the model's operation. It will be used in loops for interactions with LLMs.
 
-3) The "itemIDList", a numeric vector, refers to the "Item" column, indicating the item index of your stimuli. This is for the researcher's reference and does not interact with the model's operation.
+3) The "conditionList", required, a numeric/character vector, represents the column for "Condition", which specifies the experimental condition associated with each stimulus. Similar to "itemList", it is for the researcher's reference and does not interact with the model's operation.
 
-4) The "conditionList", a numeric/character vector, represents the "Condition" column, which specifies the experimental condition associated with each stimulus. Similar to "itemIDList", it is for the researcher's reference and does not interact with the model's operation.
+4) The "promptList", required, a character vector, maps to the column for "Prompt", which contains the actual prompts that will be presented to the model during the experiment. Each element under this column is a unique prompt the language model will process and respond to. 
 
-5) The "promptList", a character vector, argument maps to the "Prompt" column, which contains the actual prompts that will be presented to the model during the experiment. Each element under this column is a unique prompt that the language model will process and respond to.
+This package can also interface with models that support multimodal input, such as GPT-4V (https://platform.openai.com/docs/guides/vision) and llava (Liu et al., 2023). For multimodal models, use the labels <text>, <audio>, and <img> to indicate text prompts, audio inputs, and image inputs respectively. End these with </text>, </audio>, and </img>. For online models like GPT-4V, include the picture download URL; for self-hosted models like llava, users can also use the picture file path. If the study doesn’t involve input other than text, simply input the text stimuli without using the <text> label.
 
-6) The output of this function, "ExperimentItem", is a data frame generated by "loadData", which includes all the necessary details for each stimulus. The accuracy of "loadData" in mapping the Excel spreadsheet/data frame to the "ExperimentItem" is important, as it ensures that each stimulus is precisely presented according to the experimental design, thereby guaranteeing the validity and reliability of the experimental results.
+The output of this function, "ExperimentItem", is a data frame generated by "loadData", which includes all the necessary details for each stimulus. The accuracy of "loadData" in mapping the CSV spreadsheet/data frame to the "ExperimentItem" is of pivotal importance, as it ensures that each stimulus is precisely presented according to the experimental design.
 
    Next, the "experimentDesign" function allows users to define the structure and sequence of the experimental Runs (conversation):
 
    ```R
-   Design = experimentDesign(ExperimentItem, Step=1, random = F)
+   Design = experimentDesign(ExperimentItem, Session = 1, randomItem = F)
    ```
 
-   1) "ExperimentItem", a data frame, is the output of function "loadData", which is a structured data frame for storing stimuli and experimental information (e.g., item, condition, and prompt for each stimulus).
-   2) "Step", an integer, determines the iteration count for all stimuli in a Run. This argument creates a new column "Session" in your data frame. Each session contains all the stimuli of the original data frame (e.g., ExperimentItem). The number of session dependents on the argument "Step". To illustrate, if Step equals 2, then after the package collects data for a Run in first session, it will repeat the process (second session) to gather more responses from the same Run. This results in two sessions of responses being obtained for that specific Run.
-   3) "random", a logical vector, is available to randomize the order of stimuli presentation within a Run (conversation). It should remain "FALSE" for the one-trial-per-run design. Users can randomize the order of stimuli within a session by setting "TRUE".
-
+   1) "ExperimentItem", required, a data frame, is the output of function "loadData", which is a structured data frame for storing stimuli and experimental information (e.g., item, condition, and prompt for each stimulus).
+   2) The "Session", optional, an integer, specifies the number of iterations for all stimuli. The default value is 1. It adds a new column named "Session" to your data frame, where each session includes all original stimuli. If the "Session" is set to 2, the package collects data for one session and then repeats all stimuli for a second session.
+   3) "randomItem", optional, a logical vector, is available to randomize the order of item presentation within a run (conversation). It automatically remains "FALSE" for the one-trial-per-run design. 
 
 <div id="model-parameters" class="section level3">
 
@@ -223,49 +224,53 @@ The model parameters are configured to guide the behaviour of the model during t
  
 
 ```r
-gptConfig = preCheck (Design, checkToken = F, systemPrompt = "You are a participant in a psycholinguistic experiment", max_tokens = 500, temperature = 0.7, top_p =1, n = 1)
+gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a participant in a psycholinguistic experiment", max_tokens = 500, temperature = 0.7, n = 1, logprobs = True, )
 ```
 
  
 
-1) "Design", a data frame, is the output of experimentDesign function.
-2) The "systemPrompt", a character vector, offers a task instruction to the model analogous to the instructions given to participants in a psychological experiment. Should one wish to convey the instructions to the model through the trial prompt, this parameter can be left blank here or say some rules in general, such as "You are a participant in a psycholinguistics experiment, please follow the task instruction carefully." Default is empty.
-3) The "checkToken", a logical vector, allows users to conduct a token count in order to determine whether their trial(s) have more tokens than a model allows in a single conversation. The default setting, however, is FALSE. When set to TRUE, the package initiates the upload of your experimental stimuli to the tokenizer server of this package for token counting. This server implemented a tokenizer algorithm provided by OpenAI's GitHub repository (https://github.com/openai/tiktoken) specifically designed for use with GPT 3.5. However, please note that these estimates may not always correspond to accurate values for all LLMs. It is important to note that your submitted stimuli are not retained on the server. They are promptly deleted after the necessary calculations are completed. The "checkToken" function generates varying reports tailored to your specific experimental design. For instance:
+1)"data", required, a data frame, is the output of experimentDesign function.
 
- 
+2) The "systemPrompt", optional, a character vector, offers a task instruction to the model analogous to the instructions given to participants in a psychological experiment. Should one wish to convey the instructions to the model through the trial prompt, one could leave this parameter blank or state some general instructions (e.g., "You are a participant in a psycholinguistics experiment, please follow the task instruction carefully"). By default, it is empty. If not, the package will send the systemPrompt content at the start of each run.
 
-\# one-trial-per-run design
+``` r
+[list(role = "system", content = " You are a participant in a psycholinguistics experiment, please follow the task instruction carefully."),
+(role = "user", content = "Please repeat the fragment and complete it into a full sentence: Although Pelcra was sick …"),
+…]
+``` 
 
-\#       CheckItem                           Values
+3) The "max_tokens", optional, a numeric vector, limits the length of the model's response. This may lead to an incomplete response if the tokens of response intended by a model exceed this value. The default is Null.
 
-\# 1     item numbers                        1200
+4) The "checkToken", optional, a logical vector, allows users to conduct a token count in order to determine whether their trial(s) have more tokens than a model allows in a single conversation. The default setting, however, is FALSE. When set to TRUE, the package initiates the upload of your experimental stimuli to the tokenizer server of this package for token counting (note that your stimuli will not be retained on the server; they will be promptly removed after the necessary calculations are completed). Our server uses tokenizer algorithms from OpenAI (https://github.com/openai/tiktoken) and Hugging Face (https://github.com/huggingface/transformers/), supporting over 250 models, including OpenAI family, Llama and BERT, automatically selecting the appropriate tokenizer for each. If an unsupported model is chosen, users are alerted with a warning in their report indicating that results were calculated using GPT-2 as the default tokenizer. This ensures transparency about which tokenizer was used, helping users make informed decisions.
+For example, consider a study with a one-trial-per-run design that includes 40 items and 100 sessions, where the item with the highest number of tokens has 137. The "checkToken" function generates tailored reports according to your experiment's design. For instance:
 
-\# 2     max_token_numbers               137
+\# One-trial-per-run design
+\#	CheckItem			Values
+\# 1	item numbers			4000
+\# 2	max_token_numbers		137
 
- 
+In the report, the "item numbers" show the number of items you have (number of items × number of sessions). The value of "max_token_numbers" signifies the maximum token length among all experimental items. It should not exceed the input token limit of an LLM. 
+In the report for multiple-trials-per-run design, the package computes the input for the last trial of a run—incorporating all previous conversation history—based on the maximum token count. This is calculated as (systemPrompt + max_tokens) × number of trials + previous conversation history + tokens from the last item; it then reports this total for each run. Please make sure that the max token per run does not exceed the token limit of your selected LLM. The following is an example report. 
 
-The "item numbers" shows the number of items you have (the number of items* Step). The value of "max_token_numbers" signifies the maximum token length among all experimental items. It should not exceed the model’s input limits. 
-
-In the report for a multiple-trials-per-run design, the package calculates the last trial of one Run (containing all conversational history) as max token number, that is, (systemPrompt + max_tokens) * trial + previous conversation history+ token of last item; it then reports this number for each Run. Please make sure that the max token per Run should not exceed the LLM’s token limit. For instance:
-
- 
-
-\# multiple-trials-per-run design
-
-\# Run         max_tokens_per_run
-
-\# 1             756
-
-\# 2             1016
-
+\# Multiple-trials-per-run design
+\# Run		max_tokens_per_run
+\# 1		1756
+\# 2 		2016
 \# …
 
- 
+5) The "logprobs", optional, a boolean vector, specifies whether to return the log probabilities of output tokens in the chat completion mode. It appends the log probability for each token in the response under the "rawResponse" column. Additionally, users can define how many top probable tokens to display at each token position by introducing a numeric vector “top_logprobs” (https://platform.openai.com/docs/api-reference/chat/create#chat-create-logprobs), which ranges from 0 to 20, showing their corresponding log probabilities. Please note that "logprobs" must be active for this feature to work. Setting it to 2 returns the two most likely tokens at that position. For instance, if "logprobs" is set to TRUE and "top_logprobs" is set to 2, a generated response might be: “Hello! How can I assist you today?” For the first token “Hello”, two alternatives are provided:
 
-4) The "max_tokens", a numeric vector, limits the length of the model's response. This may lead to an incomplete response if the tokens of response intended by a model exceed this value. Default is 500.
-5) The "temperature", a numeric vector, controls the variability/creativity in LLM’s responses. Default is 1.
-6) The "top_p", a numeric vector, is another way controls the variability/creativity in LLM’s responses. A top_p of 0.1 signifies that the model only evaluates token within the hight 10% of the probability distribution. It is usually adivised to modify either this setting or temperature parameter, but not both simultaneously (keep it as default value 1, when you adjust the temperature parameter from default). 
-7) The "n", a numeric vector, is only available for OpenAI GPT series. Please put in "1" if you use other LLMs. This argument specifies the number of responses for each trial. If n = 20, there will be 20 responses for each request. Note that, for multiple-trials-per-run design, this parameter must be set to 1 to avoid branching conversations
+{"top_logprobs": [{"token": "Hello", "logprob": -0.31725305}, {"token": "Hi", "logprob": -1.3190403}]}
+
+This configuration also provides the two most probable tokens and their respective log probabilities for each subsequent token position. 
+In the text completion mode (detailed in section "api_url" part in session 2 .1) in the GPT family, "logprobs" is limited to a numeric vector with a maximum value of 5; hence, users don’t need to specify candidates by "top_logprobs" (https://platform.openai.com/docs/api-reference/completions/create#completions-create-logprobs). For self-hosted models, currently, only text completion supports collecting token probabilities by setting logprobs to True. This randomly returns one token and its probability at a time, but users can continue requesting until they receive the desired token.
+
+6) imgDetail, optional, offers three settings for image input: low, high, or auto. This allows users to control the model's image processing and textual interpretation. By default, the model operates in "auto" mode, automatically selecting between low and high settings based on the input image size (see more for https://platform.openai.com/docs/guides/vision/low-or-high-fidelity-image-understanding). If inputs do not include images, please skip this parameter.
+
+7) The "temperature", optional, a numeric vector, controls the creativity in LLM’s responses (https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature). 
+
+8) The "n", optional, a numeric vector, determines how many unique and independent responses are produced by the model for a single trial. For example, if n = 20, users will get 20 unique responses for each request. However, in a multiple-trials-per-run design, this parameter is automatically disabled to prevent branching conversations (https://platform.openai.com/docs/api-reference/chat/create#chat-create-n). 
+In addition to the parameters mentioned above, users can also enter optional ones. For reference, you can consult OpenAI's documentation (https://platform.openai.com/docs/api-reference/chat/create) or that of the selected model.
 
 <div id="run-the-experiment" class="section level3">
 
@@ -302,7 +307,7 @@ Upon the completion of the experiment, the responses are compiled into a file. T
 | **Column**    | **Description**                                            |
 | ------------- | ---------------------------------------------------------- |
 | **Run**       | The conversation index.                                    |
-| **ItemID**    | Indicates the Item number.                                 |
+| **Item**    | Indicates the Item number.                                 |
 | **Condition** | Details the condition under which the item  was presented  |
 | **Prompt**    | Contains the original stimulus content sent  to the model. |
 | **Response**  | The model's response to the stimulus.                      |
