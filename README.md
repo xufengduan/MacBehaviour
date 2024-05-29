@@ -244,25 +244,27 @@ gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a p
 4) The "checkToken", optional, a logical vector, allows users to conduct a token count in order to determine whether their trial(s) have more tokens than a model allows in a single conversation. The default setting, however, is FALSE. When set to TRUE, the package initiates the upload of your experimental stimuli to the tokenizer server of this package for token counting (note that your stimuli will not be retained on the server; they will be promptly removed after the necessary calculations are completed). Our server uses tokenizer algorithms from OpenAI (https://github.com/openai/tiktoken) and Hugging Face (https://github.com/huggingface/transformers/), supporting over 250 models, including OpenAI family, Llama and BERT, automatically selecting the appropriate tokenizer for each. If an unsupported model is chosen, users are alerted with a warning in their report indicating that results were calculated using GPT-2 as the default tokenizer. This ensures transparency about which tokenizer was used, helping users make informed decisions.
 For example, consider a study with a one-trial-per-run design that includes 40 items and 100 sessions, where the item with the highest number of tokens has 137. The "checkToken" function generates tailored reports according to your experiment's design. For instance:
 
-\# One-trial-per-run design
-\#	CheckItem			Values
-\# 1	item numbers			4000
-\# 2	max_token_numbers		137
+    ```r
+    # One-trial-per-run design
+    #	CheckItem			Values
+    # 1	item numbers		   4000
+    # 2	max_token_numbers	    137
+    In the report, the "item numbers" show the number of items you have (number of items × number of sessions). The value of "max_token_numbers" signifies the maximum token length among all experimental items. It should not exceed the input token limit of an LLM. 
+    ```
 
-In the report, the "item numbers" show the number of items you have (number of items × number of sessions). The value of "max_token_numbers" signifies the maximum token length among all experimental items. It should not exceed the input token limit of an LLM. 
-In the report for multiple-trials-per-run design, the package computes the input for the last trial of a run—incorporating all previous conversation history—based on the maximum token count. This is calculated as (systemPrompt + max_tokens) × number of trials + previous conversation history + tokens from the last item; it then reports this total for each run. Please make sure that the max token per run does not exceed the token limit of your selected LLM. The following is an example report. 
-
-\# Multiple-trials-per-run design
-\# Run		max_tokens_per_run
-\# 1		1756
-\# 2 		2016
-\# …
-
+    ```r
+    # Multiple-trials-per-run design
+    # Run		max_tokens_per_run
+    # 1		    1756
+    # 2 		2016
+    # …
+    In the report for multiple-trials-per-run design, the package computes the input for the last trial of a run—incorporating all previous conversation history—based on the maximum token count. This is calculated as (systemPrompt + max_tokens) × number of trials + previous conversation history + tokens from the last item; it then reports this total for each run. Please make sure that the max token per run does not exceed the token limit of your selected LLM. The following is an example report. 
+    ```
 5) The "logprobs", optional, a boolean vector, specifies whether to return the log probabilities of output tokens in the chat completion mode. It appends the log probability for each token in the response under the "rawResponse" column. Additionally, users can define how many top probable tokens to display at each token position by introducing a numeric vector “top_logprobs” (https://platform.openai.com/docs/api-reference/chat/create#chat-create-logprobs), which ranges from 0 to 20, showing their corresponding log probabilities. Please note that "logprobs" must be active for this feature to work. Setting it to 2 returns the two most likely tokens at that position. For instance, if "logprobs" is set to TRUE and "top_logprobs" is set to 2, a generated response might be: “Hello! How can I assist you today?” For the first token “Hello”, two alternatives are provided:
 
-{"top_logprobs": [{"token": "Hello", "logprob": -0.31725305}, {"token": "Hi", "logprob": -1.3190403}]}
+``` {"top_logprobs": [{"token": "Hello", "logprob": -0.31725305}, {"token": "Hi", "logprob": -1.3190403}]}```
 
-This configuration also provides the two most probable tokens and their respective log probabilities for each subsequent token position. 
+- This configuration also provides the two most probable tokens and their respective log probabilities for each subsequent token position. 
 In the text completion mode (detailed in section "api_url" part in session 2 .1) in the GPT family, "logprobs" is limited to a numeric vector with a maximum value of 5; hence, users don’t need to specify candidates by "top_logprobs" (https://platform.openai.com/docs/api-reference/completions/create#completions-create-logprobs). For self-hosted models, currently, only text completion supports collecting token probabilities by setting logprobs to True. This randomly returns one token and its probability at a time, but users can continue requesting until they receive the desired token.
 
 6) imgDetail, optional, offers three settings for image input: low, high, or auto. This allows users to control the model's image processing and textual interpretation. By default, the model operates in "auto" mode, automatically selecting between low and high settings based on the input image size (see more for https://platform.openai.com/docs/guides/vision/low-or-high-fidelity-image-understanding). If inputs do not include images, please skip this parameter.
