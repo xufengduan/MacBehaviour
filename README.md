@@ -15,7 +15,7 @@
 </div>
 
 
-The `MacBehaviour` R package offers a user-friendly toolkit for norming experimental stimuli, and replicating classic experiments on Large langauge models(LLMs). The package provides a suite of functions tailored for experiments with LLMs, including those from OpenAI's GPT series, Llama 2 Chat series in Huggingface, and open-source models.
+The `MacBehaviour` R package offers a user-friendly toolkit forreplicating classic experiments on Large langauge models(LLMs). The package provides a suite of functions tailored for experiments with LLMs, including those from OpenAI's GPT series, Llama series in Huggingface, and open-source models.
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 <br><br>The version available from the CRAN maybe out of date, but you can find the corresponding tutorial from <a href="https://doi.org/10.31234/osf.io/ywtfd">here.</a>
@@ -28,7 +28,8 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 ```R
 install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour")
-
+# Or you can install the package from CRAN by
+# install.packages("MacBehaviour")
 
 # Upon the successful installation, users can load this package into the current R session:
 
@@ -52,7 +53,7 @@ Authenticate with OpenAI using an API key.
 
 Arguments: Replace `YOUR_OPENAI_API_KEY` with your personal key.
 
-1) The "api_key" argument in this function requires your personal API key from OpenAI or Hugging Face. Please fill "NA", if you are using a self-deployed model. API enables authenticated access to language models. Researchers interested in obtaining OpenAI API key should first sign up on the OpenAI platform (https://platform.openai.com/). After registration, navigate to your account settings where you can generate your personal API key. Similarly, for integrating Hugging Face models into your research, an API key specific to Hugging Face is required. This can be obtained by creating an account on the Hugging Face platform (https://huggingface.co/). Once you are logged in, access your account settings, and find the "access token" to generate your Hugging Face API key. Please note that as the model inference needs GPUs, you may need to pay inference cost to OpenAI (https://openai.com/pricing) or Hugging Face (https://huggingface.co/blog/inference-pro) for using Llama-2-chat-hf series.
+1) The "api_key" argument in this function requires your personal API key from OpenAI or Hugging Face. Please fill "NA", if you are using a self-deployed model. API enables authenticated access to language models. Researchers interested in obtaining OpenAI API key should first sign up on the OpenAI platform (https://platform.openai.com/). After registration, navigate to your account settings where you can generate your personal API key. Similarly, for integrating Hugging Face models into your research, an API key specific to Hugging Face is required. This can be obtained by creating an account on the Hugging Face platform (https://huggingface.co/). Once you are logged in, access your account settings, and find the "access token" to generate your Hugging Face API key. Please note that as the model inference needs GPUs, you may need to pay inference cost to OpenAI (https://openai.com/pricing) or Hugging Face (https://huggingface.co/blog/inference-pro) for using Llama series.
 
 2) The "api_url" argument, a character vector, specifies the interface domain of the selected model. For experiments using the GPT family, the URLs are documented in OpenAI's API reference (https://platform.openai.com/docs/api-reference/authentication). For Llama-2 models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md).
 Here, users can modify how a language model generates responses by adjusting the "api_url". There are two modes for generating output from an LLM: "text completion" and "chat completion" (for details, please see https://platform.openai.com/docs/guides/text-generation/chat-completions-vs-completions). The "text completion" mode requires only a preamble as input, after which the model autonomously generates the remaining text (for GPT-3.5, the api_url for text completion is "https://api.openai.com/v1/completions"; "http://localhost:8000/v1/chat/completions" for self-hosted models). Conversely, "chat completion" is a mode for constructing a conversation between a human user and the language model assistant. Therefore, this approach requires a clear definition of roles (assistant vs. user) and a specific prompt for the model to follow for a task (e.g., "Please complete the following preamble..." for text completion). To engage GPT-3.5 in chat completion mode, use the URL https://api.openai.com/v1/chat/completions. For the self-hosted model, access "http://localhost:8000/v1/completions".
@@ -207,11 +208,11 @@ The output of this function, "ExperimentItem", is a data frame generated by "loa
    Next, the "experimentDesign" function allows users to define the structure and sequence of the experimental Runs (conversation):
 
    ```R
-   Design = experimentDesign(ExperimentItem, Session = 1, randomItem = F)
+   Design = experimentDesign(ExperimentItem, session = 1, randomItem = F)
    ```
 
    1) "ExperimentItem", required, a data frame, is the output of function "loadData", which is a structured data frame for storing stimuli and experimental information (e.g., item, condition, and prompt for each stimulus).
-   2) The "Session", optional, an integer, specifies the number of iterations for all stimuli. The default value is 1. It adds a new column named "Session" to your data frame, where each session includes all original stimuli. If the "Session" is set to 2, the package collects data for one session and then repeats all stimuli for a second session.
+   2) The "Session", optional, an integer, specifies the number of iterations for all stimuli. The default value is 1. It adds a new column named "session" to your data frame, where each session includes all original stimuli. If the "Session" is set to 2, the package collects data for one session and then repeats all stimuli for a second session.
    3) "randomItem", optional, a logical vector, is available to randomize the order of item presentation within a run (conversation). It automatically remains "FALSE" for the one-trial-per-run design. 
 
 <div id="model-parameters" class="section level3">
@@ -224,17 +225,17 @@ The model parameters are configured to guide the behaviour of the model during t
  
 
 ```r
-gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a participant in a psycholinguistic experiment", max_tokens = 500, temperature = 0.7, n = 1, logprobs = True, )
+gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a participant in a psychological experiment", max_tokens = 500, temperature = 0.7, n = 1)
 ```
 
  
 
 1)"data", required, a data frame, is the output of experimentDesign function.
 
-2) The "systemPrompt", optional, a character vector, offers a task instruction to the model analogous to the instructions given to participants in a psychological experiment. Should one wish to convey the instructions to the model through the trial prompt, one could leave this parameter blank or state some general instructions (e.g., "You are a participant in a psycholinguistics experiment, please follow the task instruction carefully"). By default, it is empty. If not, the package will send the systemPrompt content at the start of each run.
+2) The "systemPrompt", optional, a character vector, offers a task instruction to the model analogous to the instructions given to participants in a psychological experiment. Should one wish to convey the instructions to the model through the trial prompt, one could leave this parameter blank or state some general instructions (e.g., "You are a participant in a psychological experiment, please follow the task instruction carefully"). By default, it is empty. If not, the package will send the systemPrompt content at the start of each run.
 
 ``` r
-[list(role = "system", content = " You are a participant in a psycholinguistics experiment, please follow the task instruction carefully."),
+[list(role = "system", content = " You are a participant in a psychological experiment, please follow the task instruction carefully."),
 (role = "user", content = "Please repeat the fragment and complete it into a full sentence: Although Pelcra was sick …"),
 …]
 ``` 
