@@ -4,53 +4,43 @@
 \alias{loadData}
 \title{Step2: Load and format data}
 \usage{
-loadData(runList, itemIDList, conditionList, promptList, header = T)
+loadData(
+  runList,
+  itemList,
+  conditionList,
+  promptList,
+  header = TRUE,
+  eventList = NULL
+)
 }
 \arguments{
 \item{runList}{A numeric vector of data representing the 'Run' column in the experiment.}
 
-\item{itemIDList}{A numeric vector of data representing the 'itemID' column in the experiment.}
+\item{itemList}{A numeric vector of data representing the 'Item' column in the experiment.}
 
 \item{conditionList}{A numeric/character vector of data representing the 'Condition' column in the experiment.}
 
 \item{promptList}{A character vector of the main prompt (usually experiment items).}
 
 \item{header}{A logical value indicating if the output data.frame should include column headers (default is TRUE).}
+
+\item{eventList}{A numeric vector of data representing the 'Event' column in the experiment.}
 }
 \value{
-A data frame with the processed columns 'Run', 'Trial', 'Item', 'Condition', and 'Prompt', ready for use in experiments.
+A data frame with the processed columns 'Run', 'Event', 'Item', 'Condition', and 'Prompt', ready for use in experiments.
 }
 \description{
 Prepares the stimuli data for the experiment.
 }
 \examples{
-{
 
 df <- data.frame(
-Run = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-Item = c(1,1, 1, 1, 1, 1, 1, 1, 2),
-Condition = c(1, 2, 3, 4, 5, 6, 7, 8, 2),
-TargetPrompt1 = c("The racing driver showed the torn overall...",
-                "The racing driver showed the helpful mechanic...",
-                "The report claimed that the racing driver showed the torn overall...",
-                "The report claimed that the racing driver showed the helpful mechanic...",
-                "The racing driver showed the torn overall...",
-                "The racing driver showed the helpful mechanic...",
-                "The report claimed that the racing driver showed the torn overall...",
-                "The report claimed that the racing driver showed the helpful mechanic...",
-                "The cricket player showed the ball..."),
-TargetPrompt2 = c("The patient showed...",
-                 "The patient showed...",
-                 "The patient showed...",
-                 "The patient showed...",
-                 "The rumours alleged that the patient showed...",
-                 "The rumours alleged that the patient showed...",
-                 "The rumours alleged that the patient showed...",
-                 "The rumours alleged that the patient showed...",
-                 "The car mechanic showed...")
+Run = c(1,2),
+Item = c(1,2),
+Condition = c(1,2),
+TargetPrompt = c("1","2"),
+Event = c(1,1)
 )
-ExperimentItem=loadData(runList=df$Run,itemIDList=df$Item,conditionList=df$Condition,promptList = paste(df$TargetPrompt1,df$TargetPrompt2,sep="\n"))
-print(ExperimentItem)
-}
+ExperimentItem=loadData(df$Run,df$Item,df$Event,df$Condition,promptList = df$TargetPrompt)
 
 }

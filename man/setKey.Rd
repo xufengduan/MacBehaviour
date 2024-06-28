@@ -7,25 +7,21 @@
 setKey(api_key, api_url = "https://api.openai.com/v1/chat/completions", model)
 }
 \arguments{
-\item{api_key}{A character string: the user's OpenAI/huggingface/other API key.Please fill 'NA' for self-deployed models.}
+\item{api_key}{A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.}
 
-\item{api_url}{A character string: the user's OpenAI/huggingface/other url .default is OpenAI.}
+\item{api_url}{A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other url .default is OpenAI. for gemini, you just input "https://generativelanguage.googleapis.com/"}
 
-\item{model}{A character string: specify the model version.}
+\item{model}{A character string: specify the model version.For gemini, you could input "gemini-pro"}
 }
 \value{
 Prints a message to the console indicating whether the API key setup was successful.
 If the setup fails, the function stops with an error message.
 }
 \description{
-This function allows users to set and verify an API key for data collection. You can change the default api_url for open-source models' API.
-
-todo
+This function allows users to set and verify an API key for data collection. You can change the default api_url for others models' API.
 }
 \examples{
 \dontrun{
-set_key(api_key="YOUR_API_KEY", api_url="https://api.openai.com/v1/chat/completions",model="gpt-3.5-turbo")
-
-
+set_key(api_key="YOUR_API_KEY", api_url="api.openai.com/v1/chat/completions",model="gpt-3.5-turbo")
 }
 }
