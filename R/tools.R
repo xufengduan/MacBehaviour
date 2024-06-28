@@ -47,38 +47,27 @@
 #' @description
 #' This internal function is used to append a new message's content.
 #' @param content A character string: a new message's content
-#' @param modality A character string: If you want to use OpenAI's multimodal image model, please enter "img"; if not, there's no need to fill it in.
 #' @param imgDetail A character string: In OpenAI's multimodal model for images, the quality parameter of an image is set to "auto" by default.
 #' @return Returns the number of tokens in the provided text or stops with an error message if the API call fails.
 #'
 #' @noRd
-addContent <- function(content, modality, imgDetail) {
-  switch(modality,
-         "base" = content,
+addContent <- function(content, imgDetail) {
+  pattern <- "<text>.*?</text>|<img>.*?</img>|[^<>]+"
+  elements <- unlist(regmatches(content, gregexpr(pattern, content, perl = TRUE)))
+  content_str <- list()
+  for (element in elements) {
+    if (grepl("^<text>.*</text>$", element)) {
+      text <- gsub("</?text>", "", element)
+      content_str <- append(content_str, list(list(type = "text", text = text)))
+    } else if (grepl("^<img>.*</img>$", element)) {
+      imgUrl <- gsub("</?img>", "", element)
+      content_str <- append(content_str, list(list(type = "image_url", image_url = list(url = imgUrl, detail = imgDetail))))
+    } else {
+      content_str <- append(content_str, list(list(type = "text", text = element)))
+    }
+  }
 
-         "img" = {
-           # a="question1$$imgUrl1$$question2$$imgUrl2$$question2$$imgUrl3"
-
-           pattern <- "\\$\\$[^\\$]+\\$\\$|[^\\$]+"
-           elements <- unlist(regmatches(content, gregexpr(pattern, content)))
-           content_str=list()
-
-           # 遍历并处理每个元素
-           for (element in elements) {
-             if (grepl("^\\$\\$", element)) {
-               # 去除 $$ 并处理图片
-               imgUrl <- gsub("\\$\\$", "", element)
-               content_str=append(content_str, list(list(type = "image_url", image_url = list(url = imgUrl, detail = imgDetail))))
-             } else {
-               # 处理文本
-               content_str=append(content_str, list(list(type = "text", text = element)))
-             }
-           }
-
-           content_str
-         },
-         stop("Modality input error")
-  )
+  return(content_str)
 }
 
 #######################################addContent#############################################
@@ -103,12 +92,11 @@ addContent <- function(content, modality, imgDetail) {
 #' @param messages A list of existing messages, each as a list containing role and content.
 #' @param role A character string indicating the role for the new message.
 #' @param content A character string containing the actual text of the new message.
-#' @param modality A character string: If you want to use OpenAI's multimodal image model, please enter "img"; if not, there's no need to fill it in.
 #' @param imgDetail A character string: In OpenAI's multimodal model for images, the quality parameter of an image is set to "auto" by default.
 #' @return Returns the updated list of messages after adding the new message.
 #'
 #' @noRd
-addMessage <-function (messages,role="user",content="",modality='base',imgDetail="low"){
+addMessage <-function (messages,role="user",content="",imgDetail="low"){
 
   if(Sys.getenv("llm")=="llama"){
     new_message <- switch(role,
@@ -125,7 +113,7 @@ addMessage <-function (messages,role="user",content="",modality='base',imgDetail
                       list(
                         list(
                           role = role,
-                          content = addContent(content,modality,imgDetail)
+                          content = addContent(content,imgDetail)
                         )
                       )
       )

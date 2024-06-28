@@ -69,7 +69,6 @@ run_openai<- function(gptConfig,savePath){
   systemPrompt <- gptConfig$systemPrompt
   model <- Sys.getenv("model")
 
-  modality <-gptConfig$modality
   imgDetail <-gptConfig$imgDetail
   args <-gptConfig$args
 
@@ -134,7 +133,7 @@ run_openai<- function(gptConfig,savePath){
       # event loopr
       for (i in seq_len(nrow(it_data))) {
 
-        messages=addMessage(messages,"user",it_data$Prompt[i],modality,imgDetail)
+        messages=addMessage(messages,"user",it_data$Prompt[i],imgDetail)
         t_data <- it_data[i,]
 
         repeat {
@@ -434,7 +433,7 @@ run_claude<- function(gptConfig,savePath){
       # Trial loop
         for (i in seq_len(nrow(it_data))) {
 
-        messages=addMessage(messages,"user",it_data$Prompt[i],modality="base")
+        messages=addMessage(messages,"user",it_data$Prompt[i])
         t_data <- it_data[i,]
 
         repeat {
@@ -472,7 +471,7 @@ run_claude<- function(gptConfig,savePath){
           t_data$N <- nr
 
           if (n==1){
-            messages=addMessage(messages,"assistant",content_str,modality = "base")
+            messages=addMessage(messages,"assistant",content_str)
 
           }
           cMessage <- paste(messages, collapse = " ")
@@ -584,7 +583,7 @@ run_gemini<- function(gptConfig,savePath){
 
       for (i in seq_len(nrow(it_data))) {
 
-        messages=addMessage(messages,"user",it_data$Prompt[i],modality="base")
+        messages=addMessage(messages,"user",it_data$Prompt[i])
         t_data <- it_data[i,]
 
         repeat {
@@ -621,7 +620,7 @@ run_gemini<- function(gptConfig,savePath){
           t_data$N <- nr
 
           if (n==1){
-            messages=addMessage(messages,"model",content_str,modality = "base")
+            messages=addMessage(messages,"model",content_str)
 
           }
           cMessage <- paste(messages, collapse = " ")
