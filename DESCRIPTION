@@ -1,21 +1,14 @@
 Package: MacBehaviour
 Type: Package
 Title: Behavioural studies of large language models
-Version: 1.2.3
+Version: 1.2.4
 Author: Xufeng Duan, Shixuan Li, Zhenguang Cai
-Maintainer: Shixuan Li <shixuanli@cuhk.edu.hk>
+Maintainer: Xufeng Duan <dxfdxfdxf88@gmail.com>
 Description: This package provides an efficient way to design and conduct psycholinguistic experiments for testing the performance of large language models(LLM). It simplifies the process of setting up experiments, and data collection via LLMs API, facilitating a smooth workflow for researchers in the field of machine behaviour.
 License: LGPL-3
 Encoding: UTF-8
-LazyData: false
-Depends: 
-    R (>= 3.5.0),
-    openxlsx,
-    httr,
-    dplyr,
-    rjson
+Depends: R (>= 3.5.0), openxlsx, httr, dplyr, rjson
 RoxygenNote: 7.3.1
-Suggests: 
-    knitr,
-    rmarkdown,
-    roxygen2
+Suggests: knitr, rmarkdown, roxygen2
+NeedsCompilation: no
+Packaged: 2024-06-30 11:39:10 UTC; xufengduan

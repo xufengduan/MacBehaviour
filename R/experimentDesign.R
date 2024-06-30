@@ -2,6 +2,7 @@
 #'
 #' Defines the experiment setup based on the stimuli loaded.
 #'
+#' @importFrom stats aggregate
 #' @param data A data frame that has been processed through the 'loadData' function, containing the experimental items and their attributes.
 #' @param session An integer indicating how many sessions (the whole set of trials) should be run. Default is 1, meaning no repetition.
 #' @param randomItem A logical indicating whether the Item should be randomized. Default is FALSE, meaning trials will occur in the order provided.

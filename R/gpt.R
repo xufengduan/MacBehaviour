@@ -3,6 +3,7 @@
 #' This internal function sends requests to the Huggingface API, initiating a conversation with llama2 . It uses specified parameters for the llama model.
 #' @import httr
 #' @import rjson
+#' @import dplyr
 #' @param messages A character strings that users want to send to llama
 #' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
 #' @return A  character strings containing the llama's responses.

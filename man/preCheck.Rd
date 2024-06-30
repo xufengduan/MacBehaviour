@@ -25,8 +25,6 @@ preCheck(
 \item{version}{When using the Claude model, the version parameter required defaults to "2023-06-01".}
 
 \item{...}{Variable parameter lists allow you to input additional parameters supported by the model you're using, such as n=2 / logprobs=TRUE... Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.}
-
-\item{max_tokens}{The maximum number of tokens allowed for the model's response, default is 500.}
 }
 \value{
 A list containing the original data and the parameters for the chatGPT model interaction, confirming that the setup has passed the token checks or indicating issues if found.
@@ -41,14 +39,14 @@ Run = c(1,2),
 Item = c(1,2),
 Event =c(1,1),
 Condition = c(1,2),
-TargetPrompt = c("1","2")
+TargetPrompt = c("please repeat this sentence: test1","please repeat this sentence: test2")
 )
 
 ExperimentItem=loadData(df$Run,df$Item,df$Event,df$Condition,promptList = df$TargetPrompt)
 
-Design=experimentDesign(ExperimentItem,Step=1)
+Design=experimentDesign(ExperimentItem,session=1)
 
-gptConfig=preCheck(Design, systemPrompt="You are a participant in a psycholinguistic experiment",
-                    max_tokens=10,imgDetail="low",temperature=0.7)
+gptConfig=preCheck(Design, systemPrompt="You are a participant in a psychological experiment",
+                    imgDetail="low",temperature=0.7)
 
 }

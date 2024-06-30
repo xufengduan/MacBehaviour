@@ -24,7 +24,8 @@
 runExperiment<- function (gptConfig,savePath="./output.xlsx"){
   switch(Sys.getenv("llm"),
          "openai" = run_openai(gptConfig,savePath),
-         "llama" = run_llama(gptConfig,savePath),
+         "llama-2" = run_llama(gptConfig,savePath),
+         "llama-3" = run_llama(gptConfig,savePath),
          "claude"= run_claude(gptConfig,savePath),
          "gemini"= run_gemini(gptConfig,savePath),
          "baichuan"= run_baichuan(gptConfig,savePath),
@@ -54,7 +55,7 @@ runExperiment<- function (gptConfig,savePath="./output.xlsx"){
 #' This internal function manages the execution of the experiment scenarios based on the gptConfig settings.
 #' It iteratively processes the data for each run and trial, interacts with the GPT model,
 #' and appends the results in the designated Excel file. It is utilized within the 'runExperiment' function.
-#' @importFrom utils setTxtProgressBar txtProgressBar write.csv
+#' @importFrom utils setTxtProgressBar txtProgressBar write.csv modifyList
 #' @import openxlsx
 #' @param gptConfig A list containing the configuration for the GPT model, including the system prompt,
 #' model specifications, token settings, and experiment mode.
@@ -226,7 +227,7 @@ run_openai<- function(gptConfig,savePath){
 #' This internal function manages the execution of the experiment scenarios based on the gptConfig settings.
 #' It iteratively processes the data for each run and trial, interacts with the llama model,
 #' and appends the results in the designated Excel file. It is utilized within the 'runExperiment' function.
-#' @importFrom utils setTxtProgressBar txtProgressBar write.csv
+#' @importFrom utils setTxtProgressBar txtProgressBar write.csv modifyList
 #' @import openxlsx
 #' @param gptConfig A list containing the configuration for the llama model, including the system prompt,
 #' model specifications, token settings, and experiment mode.
@@ -277,7 +278,13 @@ run_llama<- function(gptConfig,savePath){
     # Run loop
     for (r in unique(data$Run)) {
       r_data <- s_data[s_data$Run == r, ]
-      messages=""
+      
+      if(Sys.getenv("llm")=="llama-2"){
+      messages="<s>[INST] "
+      }else if(Sys.getenv("llm")=="llama-3"){
+        messages="<|begin_of_text|>"
+      }
+      
       if(systemPrompt!=""){
         messages=addMessage(messages,"system", systemPrompt)
       }
@@ -290,7 +297,6 @@ run_llama<- function(gptConfig,savePath){
         # messages=addMessage(messages,"system", systemPrompt)
         # event loopr
 
-      #####TODO:2222
       # Trial loop
       for (i in seq_len(nrow(it_data))) {
         messages=addMessage(messages,"user",it_data$Prompt[i])
@@ -298,14 +304,20 @@ run_llama<- function(gptConfig,savePath){
 
         repeat {
           result <- tryCatch({
-            # TODO:111
             result_list  <- do.call("llama_chat",modifyList(list(messages=messages),args))
+            # print("Result list:")
+            # print(result_list)
+            
             content_list <- result_list$content_list
+            # print("Content list:")
+            # print(content_list)
+            
+            
             raw_temp <- result_list$raw_response
             TRUE
 
           }, error = function(e) {
-            warning(paste("wariming:", e))
+            warning(paste("warning:", e))
             FALSE
           })
 
@@ -315,8 +327,12 @@ run_llama<- function(gptConfig,savePath){
             break
           }
         }
+          if (Sys.getenv("llm")=="llama-3"){
+            t_data$Response <- substring(content_list, 12)
+            } else {
+              t_data$Response <- content_list
+            }
 
-          t_data$Response <- content_list
           t_data$N <- 1
 
 
@@ -365,7 +381,7 @@ run_llama<- function(gptConfig,savePath){
 #' This internal function manages the execution of the experiment scenarios based on the gptConfig settings.
 #' It iteratively processes the data for each run and trial, interacts with the llama model,
 #' and appends the results in the designated Excel file. It is utilized within the 'runExperiment' function.
-#' @importFrom utils setTxtProgressBar txtProgressBar write.csv
+#' @importFrom utils setTxtProgressBar txtProgressBar write.csv modifyList
 #' @import openxlsx
 #' @param gptConfig A list containing the configuration for the llama model, including the system prompt,
 #' model specifications, token settings, and experiment mode.
@@ -517,7 +533,7 @@ run_claude<- function(gptConfig,savePath){
 #' This internal function manages the execution of the experiment scenarios based on the gptConfig settings.
 #' It iteratively processes the data for each run and trial, interacts with the llama model,
 #' and appends the results in the designated Excel file. It is utilized within the 'runExperiment' function.
-#' @importFrom utils setTxtProgressBar txtProgressBar write.csv
+#' @importFrom utils setTxtProgressBar txtProgressBar write.csv modifyList
 #' @import openxlsx
 #' @param gptConfig A list containing the configuration for the llama model, including the system prompt,
 #' model specifications, token settings, and experiment mode.
@@ -663,7 +679,7 @@ run_gemini<- function(gptConfig,savePath){
 #' This internal function manages the execution of the experiment scenarios based on the gptConfig settings.
 #' It iteratively processes the data for each run and trial, interacts with the llama model,
 #' and appends the results in the designated Excel file. It is utilized within the 'runExperiment' function.
-#' @importFrom utils setTxtProgressBar txtProgressBar write.csv
+#' @importFrom utils setTxtProgressBar txtProgressBar write.csv modifyList
 #' @import openxlsx
 #' @param gptConfig A list containing the configuration for the llama model, including the system prompt,
 #' model specifications, token settings, and experiment mode.

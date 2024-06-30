@@ -238,12 +238,12 @@ gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a p
 [list(role = "system", content = " You are a participant in a psychological experiment, please follow the task instruction carefully."),
 (role = "user", content = "Please repeat the fragment and complete it into a full sentence: Although Pelcra was sick …"),
 …]
-``` 
+```
 
 3) The "max_tokens", optional, a numeric vector, limits the length of the model's response. This may lead to an incomplete response if the tokens of response intended by a model exceed this value. The default is Null.
 
 4) The "checkToken", optional, a logical vector, allows users to conduct a token count in order to determine whether their trial(s) have more tokens than a model allows in a single conversation. The default setting, however, is FALSE. When set to TRUE, the package initiates the upload of your experimental stimuli to the tokenizer server of this package for token counting (note that your stimuli will not be retained on the server; they will be promptly removed after the necessary calculations are completed). Our server uses tokenizer algorithms from OpenAI (https://github.com/openai/tiktoken) and Hugging Face (https://github.com/huggingface/transformers/), supporting over 250 models, including OpenAI family, Llama and BERT, automatically selecting the appropriate tokenizer for each. If an unsupported model is chosen, users are alerted with a warning in their report indicating that results were calculated using GPT-2 as the default tokenizer. This ensures transparency about which tokenizer was used, helping users make informed decisions.
-For example, consider a study with a one-trial-per-run design that includes 40 items and 100 sessions, where the item with the highest number of tokens has 137. The "checkToken" function generates tailored reports according to your experiment's design. For instance:
+   For example, consider a study with a one-trial-per-run design that includes 40 items and 100 sessions, where the item with the highest number of tokens has 137. The "checkToken" function generates tailored reports according to your experiment's design. For instance:
 
     ```r
     # One-trial-per-run design
@@ -310,7 +310,7 @@ Upon the completion of the experiment, the responses are compiled into a file. T
 | **Column**    | **Description**                                            |
 | ------------- | ---------------------------------------------------------- |
 | **Run**       | The conversation index.                                    |
-| **Item**    | Indicates the Item number.                                 |
+| **Item**      | Indicates the Item number.                                 |
 | **Condition** | Details the condition under which the item  was presented  |
 | **Prompt**    | Contains the original stimulus content sent  to the model. |
 | **Response**  | The model's response to the stimulus.                      |
@@ -321,4 +321,3 @@ Upon the completion of the experiment, the responses are compiled into a file. T
 </div>
 
 ### 
- 

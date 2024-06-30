@@ -98,11 +98,20 @@ addContent <- function(content, imgDetail) {
 #' @noRd
 addMessage <-function (messages,role="user",content="",imgDetail="low"){
 
-  if(Sys.getenv("llm")=="llama"){
+  if(Sys.getenv("llm")=="llama-2"){
     new_message <- switch(role,
-                          "system" = paste0("<s>[INST] <<SYS>>\n", content, "\n<</SYS>>\n"),
+                          "system" = paste0("<<SYS>>\n", content, "\n<</SYS>>\n\n"),
                           "user" = paste0(content, " [/INST] "),
-                          "assistant" = paste0(content, " </s><s>[INST] "),
+                          "assistant" = paste0(content, "</s>\n<s>[INST] "),
+                          ""
+    )
+    return(paste0(messages, new_message))
+  }
+  else if(Sys.getenv("llm")=="llama-3"){
+    new_message <- switch(role,
+                          "system" = paste0("<|start_header_id|>system<|end_header_id|>\n\n", content, "<|eot_id|>"),
+                          "user" = paste0("<|start_header_id|>user<|end_header_id|>\n\n",content, "<|eot_id|>\n"),
+                          "assistant" = paste0("<|start_header_id|>assistant<|end_header_id|>\n\n",substring(content, 12),"<|eot_id|>\n"),
                           ""
     )
     return(paste0(messages, new_message))
@@ -141,7 +150,6 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
         )
       )
     )
-    # 将新消息添加到 messages 列表
     messages <- append(messages, list(newMessage))
     return(messages)
 
@@ -184,7 +192,6 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
 #' @export
 setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",model){
   if (!is.null(api_key) && is.character(api_key)) {
-    #TODO:判断出llm
 
     if(grepl("aimlapi",tolower(api_url))){
       Sys.setenv(llm="aimlapi")
@@ -202,8 +209,11 @@ setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",
       else if(grepl("gemini",tolower(model))){
         Sys.setenv(llm="gemini")
       }
+      else if(grepl("llama-3",tolower(model))){
+        Sys.setenv(llm="llama-3")
+      }
       else if(grepl("llama",tolower(model))){
-        Sys.setenv(llm="llama")
+        Sys.setenv(llm="llama-2")
       }
       else{
         Sys.setenv(llm="custom")
@@ -217,7 +227,8 @@ setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",
 
     switch(tolower(Sys.getenv("llm")),
            "openai" = chatgpt_test(api_key,model),
-           "llama" = llama_test(api_key,model),
+           "llama-3" = llama3_test(api_key,model),
+           "llama-2" = llama2_test(api_key,model),
            "claude"= claude_test(api_key,model),
            "gemini"= gemini_test(api_key,model),
            "baichuan"= baichuan_test(api_key,model),
@@ -276,16 +287,38 @@ chatgpt_test <- function(key,model){
 #' @return If the test is normal, it will display "Setup api_key successful!"
 #'
 #' @noRd
-llama_test <- function(key,model){
+llama2_test <- function(key,model){
   message(llama_chat("<s>[INST] <<SYS>>
-You are a helpful AI, please answer according to my requirements, do not output other irrelevant content
+You are a helpful AI, please answer according to my instruction, do not output other irrelevant content.
 <</SYS>>
 
-please say 'Setup api_key successful!' [/INST]",max_tokens = 30,temperature = 0.1)$content_list)
+please repeat: 'Setup api_key successful!' [/INST]",max_tokens = 30,temperature = 0.1)$content_list)
   message(paste("your api_key:",key))
 
-  Sys.setenv(model = "llama")
+  Sys.setenv(model = "llama-2")
 }
+
+#' Internal model test function
+#'
+#' @description
+#' This internal function is designed to verify the correctness of the API key and ensure that communication with the model is functioning properly.
+#'
+#' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
+#' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
+#' @return If the test is normal, it will display "Setup api_key successful!"
+#'
+#' @noRd
+llama3_test <- function(key,model){
+  message(llama_chat("<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+
+You are a helpful AI, please answer according to my instruction, do not output other irrelevant content. <|eot_id|><|start_header_id|>user<|end_header_id|>
+
+please repeat: 'Setup api_key successful!'<|eot_id|><|start_header_id|>assistant<|end_header_id|>",max_tokens = 30,temperature = 0.1)$content_list)
+  message(paste("your api_key:",key))
+  
+  Sys.setenv(model = "llama-3")
+}
+
 
 #' Internal model test function
 #'
