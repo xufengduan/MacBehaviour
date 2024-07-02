@@ -116,7 +116,6 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
     )
     return(paste0(messages, new_message))
   }
-
   else if((Sys.getenv("llm")=="chatgpt")||(Sys.getenv("llm")=="openai")||(Sys.getenv("llm")=="custom")){
       messages <- append(messages,
                       list(
@@ -126,6 +125,17 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
                         )
                       )
       )
+
+    return(messages)
+  }
+  else if ((Sys.getenv("llm")=="baidubce")){
+    messages <- append(messages,
+                       list(
+                       list(
+                           role = role,
+                           content = addContent(content)[[1]][["text"]]
+                       )
+    ))
 
     return(messages)
   }
@@ -182,6 +192,7 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param api_url A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other url .default is OpenAI. for gemini, you just input "https://generativelanguage.googleapis.com/"
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
 #' @return Prints a message to the console indicating whether the API key setup was successful.
 #' If the setup fails, the function stops with an error message.
 #'
@@ -190,15 +201,20 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
 #' set_key(api_key="YOUR_API_KEY", api_url="api.openai.com/v1/chat/completions",model="gpt-3.5-turbo")
 #' }
 #' @export
-setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",model){
+setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",model,...){
+  args <- list(...)
+  
   if (!is.null(api_key) && is.character(api_key)) {
 
     if(grepl("aimlapi",tolower(api_url))){
       Sys.setenv(llm="aimlapi")
     }
     else{
-      if(grepl("gpt",tolower(model))){
+      if(grepl("openai",tolower(api_url))){
         Sys.setenv(llm="openai")
+      }
+      else if(grepl("baidubce",tolower(api_url))){
+        Sys.setenv(llm="baidubce")
       }
       else if(grepl("baichuan",tolower(model))){
         Sys.setenv(llm="baichuan")
@@ -224,9 +240,15 @@ setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",
     Sys.setenv(key=api_key)
     Sys.setenv(url=api_url)
     Sys.setenv(model=model)
+    if (!is.null(args[["secret_key"]])){
+      Sys.setenv(secret_key = args[["secret_key"]])
+      }
+    
 
     switch(tolower(Sys.getenv("llm")),
-           "openai" = chatgpt_test(api_key,model),
+           #"openai" = chatgpt_test(api_key,model),
+           "openai" = c(openai_chat()$content_list,model),
+           "baidubce" = c(wenxin_chat()$content_list,model),
            "llama-3" = llama3_test(api_key,model),
            "llama-2" = llama2_test(api_key,model),
            "claude"= claude_test(api_key,model),
@@ -250,7 +272,7 @@ setKey <- function(api_key,api_url="https://api.openai.com/v1/chat/completions",
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 chatgpt_test <- function(key,model){
@@ -259,7 +281,7 @@ chatgpt_test <- function(key,model){
     message(openai_chat(list(
       list(
         role = "user",
-        content = "this is a test,please say 'Setup api_key successful!'"
+        content = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."
       )
     ),max_tokens = 10,temperature = 0.1,model=model)$content_list)
     message(paste("your api_key:",key))
@@ -268,7 +290,7 @@ chatgpt_test <- function(key,model){
     message(openai_completion(list(
       list(
         role = "user",
-        content = "this is a test,please say 'Setup api_key successful!'"
+        content = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."
       )
     ),max_tokens = 10,temperature = 0.1,model=model)$content_list)
     message(paste("your api_key:",key))
@@ -284,7 +306,7 @@ chatgpt_test <- function(key,model){
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 llama2_test <- function(key,model){
@@ -292,7 +314,7 @@ llama2_test <- function(key,model){
 You are a helpful AI, please answer according to my instruction, do not output other irrelevant content.
 <</SYS>>
 
-please repeat: 'Setup api_key successful!' [/INST]",max_tokens = 30,temperature = 0.1)$content_list)
+Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse. [/INST]",max_tokens = 30,temperature = 0.1)$content_list)
   message(paste("your api_key:",key))
 
   Sys.setenv(model = "llama-2")
@@ -305,7 +327,7 @@ please repeat: 'Setup api_key successful!' [/INST]",max_tokens = 30,temperature 
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 llama3_test <- function(key,model){
@@ -313,7 +335,7 @@ llama3_test <- function(key,model){
 
 You are a helpful AI, please answer according to my instruction, do not output other irrelevant content. <|eot_id|><|start_header_id|>user<|end_header_id|>
 
-please repeat: 'Setup api_key successful!'<|eot_id|><|start_header_id|>assistant<|end_header_id|>",max_tokens = 30,temperature = 0.1)$content_list)
+Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse.<|eot_id|><|start_header_id|>assistant<|end_header_id|>",max_tokens = 30,temperature = 0.1)$content_list)
   message(paste("your api_key:",key))
   
   Sys.setenv(model = "llama-3")
@@ -327,14 +349,14 @@ please repeat: 'Setup api_key successful!'<|eot_id|><|start_header_id|>assistant
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 claude_test <- function(key,model){
   message(claude_chat(messages=list(
     list(
       role = "user",
-      content = "this is a test,please say 'Setup api_key successful!'"
+      content = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."
     )
   ),max_tokens = 10,temperature = 0.1,model=model,version ="2023-06-01")$content_list)
   message(paste("your api_key:",key))
@@ -347,11 +369,11 @@ claude_test <- function(key,model){
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 gemini_test <- function(key,model){
-  message(gemini_chat(messages = list(list(parts = list(list(text = "this is a test,please say 'Setup api_key successful!'"))))
+  message(gemini_chat(messages = list(list(parts = list(list(text = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."))))
   ,maxOutputTokens = 10,temperature = 0.1,model = model)$content_list)
   message(paste("your api_key:",key))
 }
@@ -363,7 +385,7 @@ gemini_test <- function(key,model){
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 custom_test <- function(model){
@@ -371,7 +393,7 @@ custom_test <- function(model){
     message(openai_chat(list(
       list(
         role = "user",
-        content = "this is a test,please say 'Model test successful!'"
+        content = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."
       )
     ),max_tokens = 10,temperature = 0.1,model=Sys.getenv("model"))$content_list)
 
@@ -394,14 +416,14 @@ custom_test <- function(model){
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 baichuan_test <- function(key,model){
   message(baichuan_chat(list(
     list(
       role = "user",
-      content = "this is a test,please say 'Setup api_key successful!'"
+      content = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."
     )
   ),max_tokens = 10,temperature = 0.1,model=model)$content_list)
   message(paste("your api_key:",key))
@@ -415,14 +437,14 @@ baichuan_test <- function(key,model){
 #'
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @return If the test is normal, it will display "Setup api_key successful!"
+#' @return If the test is normal, it will display "Setup successful!"
 #'
 #' @noRd
 aimlapi_test <- function(key,model){
   message(openai_chat(list(
     list(
       role = "user",
-      content = "this is a test,please say 'Setup api_key successful!'"
+      content = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."
     )
   ),max_tokens = 10,temperature = 0.1,model=model)$content_list)
   message(paste("your api_key:",key))

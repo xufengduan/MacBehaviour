@@ -4,7 +4,12 @@
 \alias{setKey}
 \title{Step1: Set model's API key and url.}
 \usage{
-setKey(api_key, api_url = "https://api.openai.com/v1/chat/completions", model)
+setKey(
+  api_key,
+  api_url = "https://api.openai.com/v1/chat/completions",
+  model,
+  ...
+)
 }
 \arguments{
 \item{api_key}{A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.}
@@ -12,6 +17,8 @@ setKey(api_key, api_url = "https://api.openai.com/v1/chat/completions", model)
 \item{api_url}{A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other url .default is OpenAI. for gemini, you just input "https://generativelanguage.googleapis.com/"}
 
 \item{model}{A character string: specify the model version.For gemini, you could input "gemini-pro"}
+
+\item{...}{Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.}
 }
 \value{
 Prints a message to the console indicating whether the API key setup was successful.

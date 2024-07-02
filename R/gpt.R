@@ -14,7 +14,7 @@ llama_chat <- function(
 ){
 
   if (is.null(Sys.getenv("key"))) {
-    stop("API key is not set.")
+    stop("api_key is required.")
   }
 
   headers <- c(
@@ -40,7 +40,6 @@ llama_chat <- function(
       encode = "json",
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
-
 
     if(res$status_code != 200){
       response_content = paste("error with code:",res$status_code)
@@ -82,8 +81,8 @@ llama_chat <- function(
 #' @return A list of character strings containing the ChatGPT's responses.
 #' @noRd
 openai_chat <- function(
-    messages = list(),
-    model = "gpt-4",
+    messages = list(list(role = "user", content = "Please repeat 'Setup successful'. DON'T say anything else.")),
+    model = Sys.getenv("model"),
     ...
 ){
   if (is.null(Sys.getenv("key"))) {
@@ -119,7 +118,7 @@ openai_chat <- function(
 
     response_text <- content(res, 'text', encoding = "UTF-8")
 
-    res_json <- rjson::fromJSON(response_text)
+    res_json <- fromJSON(response_text)
 
     choices <- res_json$choices
 
@@ -131,6 +130,7 @@ openai_chat <- function(
   })
 
   result_list <- list(content_list = content_list, raw_response = response_text)
+  
   return(result_list)
 }
 
@@ -394,7 +394,7 @@ openai_completion <- function(
   )
 
   args <- list(
-    prompt = rjson::toJSON(messages),
+    prompt = toJSON(messages),
     model = model
   )
 
@@ -430,4 +430,70 @@ openai_completion <- function(
 
   result_list <- list(content_list = content_list, raw_response = response_text)
   return(result_list)
+}
+
+#' Internal function to interact with baichuan
+#'
+#' This internal function sends requests to the baichuan API, initiating a conversation with baichuan. It uses specified parameters for the baichuan model.
+#' @import httr
+#' @import rjson
+#' @param messages A list of character strings that users want to send to baichuan.
+#' @param model A character string specifying the model of baichuan (e.g., "Baichuan2-Turbo").
+#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
+#' @return A list of character strings containing the baichuan's responses.
+#' @noRd
+
+wenxin_chat <- function(messages = list(list(role = "user", content = "Please repeat 'Setup successful'. DON'T say anything else.")), ...) {
+  model = Sys.getenv("model")
+  api_key = Sys.getenv("key")
+  secret_key = Sys.getenv("secret_key")
+  url = Sys.getenv("url")
+  
+  get_access_token <- function(api_key, secret_key) {
+    url_access_token <- paste0("https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=", api_key, "&client_secret=", secret_key)
+    res <- GET(url_access_token)
+    
+    if (res$status_code != 200) {
+      stop(paste("Error getting access token, status code:", res$status_code))
+    }
+    
+    res_json <- fromJSON(content(res, "text", encoding = "UTF-8"))
+    return(res_json$access_token)
+  }
+  
+  access_token <- get_access_token(api_key, secret_key)
+  
+  headers <- c('Content-Type' = 'application/json')
+  
+  args <- list(messages = messages)
+  
+  model_url <- paste0(url, "?access_token=", access_token)
+
+  tryCatch({
+    res <- POST(
+      url = model_url,
+      body = modifyList(args,list(...)),
+      add_headers(headers),
+      encode = "json",
+      config = config(ssl_verifypeer = 0L, timeout = 300)
+    )
+    
+    if (res$status_code != 200) {
+      response_content = paste("Error with code:", res$status_code)
+      message(response_content)
+      message(content(res, 'text', encoding = "UTF-8"))
+      stop(paste("Error:", res$status_code))
+    }
+    
+    response_text <- content(res, 'text', encoding = "UTF-8")
+    res_json <- fromJSON(response_text)
+    # message(res_json)
+    result <- list(content_list = res_json$result, raw_response = response_text)
+  }, warning = function(war) {
+    message(paste("Caught warning:", war$message))
+  }, error = function(err) {
+    stop(err)
+  })
+  
+  return(result)
 }
