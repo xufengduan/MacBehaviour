@@ -19,37 +19,82 @@ The `MacBehaviour` R package offers a user-friendly toolkit forreplicating class
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 <br><br>The version available from the CRAN maybe out of date, but you can find the corresponding tutorial from <a href="https://doi.org/10.31234/osf.io/ywtfd">here.</a>
+
 <div id="installing-and-loading-necessary-packages" class="section level3">
+## News
+
+2024-July-2: Support models on Qianfan Baidu (百度千帆大模型平台).
 
 
+
+## Supported Model Platforms
+
+This package enables local deployment of LLMs through **FastChat** (https://github.com/lm-sys/FastChat).
+
+If you prefer using cloud-based models, this package currently supports the following platforms:
+
+1. OpenAI (https://platform.openai.com/)
+2. Hugging face (https://huggingface.co/).
+3. Claude (https://www.anthropic.com/api)
+4. Gemini (https://ai.google.dev/)
+5. Qianfan Baidu (https://qianfan.cloud.baidu.com/)
+6. Baichuan (https://platform.baichuan-ai.com/)
+
+## Supported Models:
+
+| Model                                                     | Developer/Platform                |
+| :-------------------------------------------------------- | --------------------------------- |
+| GPT  family  (GPT-3.5,  GPT-4 et al.)                     | OpenAI (OpenAI et al., 2024)      |
+| Claude family  (Haiku, Sonnet, Opu et al.)                | Anthropic (Anthropic,  2023)      |
+| Gemini family  (Ultra, Pro, and Nano et al.)              | Google (Gemini Team et al., 2023) |
+| Llama  family  (Llama-2,  Llama-3)                        | Meta  (Touvron et al., 2023)      |
+| BaiChuan family  (7B, 13B et al)                          | Baichuan (Yang et al., 2023)      |
+| 50+  other self-hosted LLMs  (e.g.,  Vicuna, FastChat-T5) | FastChat (Zheng  et al., 2023)    |
+
+
+
+## Tutorial
 
 ### 1\. Install and load package:
 
+There are two ways for installing this package: from Git hub or CRAN
+
 ```R
+# From github
 install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour")
-# Or you can install the package from CRAN by
-# install.packages("MacBehaviour")
-
-# Upon the successful installation, users can load this package into the current R session:
-
-
-library("MacBehaviour")
-
 
 ```
 
 <div id="set-api-key" class="section level3">
+Or you can install the package from CRAN by
+
+```R
+# From CRAN
+# install.packages("MacBehaviour")
+```
+
+
+
+Upon the successful installation, users can load this package into the current R session:
+
+``` R
+library("MacBehaviour")
+```
+
 
 
 ### 2\. Set API Key:
 
-Authenticate with OpenAI using an API key.
+Authenticate with LLMs using an API key.
 
     setKey(api_key = "YOUR_API_KEY", api_url = "YOUR_MODEL_URL", model = "YOUR_MODEL")
     
-    ## [1] "Setup api_key successful!"
-    ## [1] "your api_key: sk-XXXXXXXXXXXXXXXXXX"
+    # you need to input an additional argument secrect_key = "YOUR_SCRECT_KEY" here to access to Baidu Qianfan platform.
+    
+    # Then you will receive a message:
+    
+    ## "Setup api_key successful!"
 
 Arguments: Replace `YOUR_OPENAI_API_KEY` with your personal key.
 
@@ -163,8 +208,6 @@ Load your stimuli from an Excel file.
 The "read.xlsx" function from the "openxlsx" package reads the Excel file, converting it into a data frame within R. You can also import a data frame containing stimuli and experiment information through other functions. To accurately present the stimuli within the R environment, the "loadData" function is utilized, which organized the data from a data frame for further processing:
 
 <table>
-
-
 <thead>
 
 <tr class="header">
