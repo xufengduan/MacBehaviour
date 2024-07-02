@@ -21,6 +21,7 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 <br><br>The version available from the CRAN maybe out of date, but you can find the corresponding tutorial from <a href="https://doi.org/10.31234/osf.io/ywtfd">here.</a>
 
 <div id="installing-and-loading-necessary-packages" class="section level3">
+
 ## News
 
 2024-July-2: Support models on Qianfan Baidu (百度千帆大模型平台).
