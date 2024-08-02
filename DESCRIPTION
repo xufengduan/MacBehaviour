@@ -1,7 +1,7 @@
 Package: MacBehaviour
 Type: Package
 Title: Behavioural Studies of Large Language Models
-Version: 1.2.5
+Version: 1.2.6
 Author: Xufeng Duan, Shixuan Li, Zhenguang Cai
 Maintainer: Xufeng Duan <dxfdxfdxf88@gmail.com>
 Description: Efficient way to design and conduct psychological experiments for testing the performance of large language models. It simplifies the process of setting up experiments and data collection via language models’ API, facilitating a smooth workflow for researchers in the field of machine behaviour.

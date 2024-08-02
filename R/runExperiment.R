@@ -378,7 +378,7 @@ run_gemini <- function(gptConfig, savePath) {
 #' @noRd
 run_baichuan <- function(gptConfig, savePath) {
   data <- as.data.frame(gptConfig[1])
-  model <- gptConfig$model
+  model <- Sys.getenv("model")
   args <- gptConfig$args
   n <- args[["n"]]
   if (is.null(n)) {
@@ -575,8 +575,6 @@ run_LLMs <- function(gptConfig, savePath) {
     ## ToDo: add more models
     model_request <- list(
       openai = list(chat = "openai_chat", completion = "openai_completion"),
-      aimlapi_test = list(chat = "openai_chat", completion = "openai_completion"),
-      custom = list(chat = "openai_chat", completion = "openai_completion"),
       "llama-3" = list(chat = "llama_chat", completion = "llama_chat"),
       "llama-2" = list(chat = "llama_chat", completion = "llama_chat"),
       baidubce = list(chat = "wenxin_chat", completion = "wenxin_chat")
@@ -685,16 +683,9 @@ run_LLMs <- function(gptConfig, savePath) {
     )
     # example_model = list(chat = "example_chat_function", completion = "example_completion_function")
   )
-  llm_role <- Sys.getenv("llm")
-  if (is.null(model_roles[[llm_role]]$user)) {
-    user <- model_roles[["openai"]]$user
-    system <- model_roles[["openai"]]$system
-    assistant <- model_roles[["openai"]]$assistant
-  } else {
-    user <- model_roles[[llm_role]]$user
-    system <- model_roles[[llm_role]]$system
-    assistant <- model_roles[[llm_role]]$assistant
-  }
+  user <- model_roles[[Sys.getenv("llm")]]$user
+  system <- model_roles[[Sys.getenv("llm")]]$system
+  assistant <- model_roles[[Sys.getenv("llm")]]$assistant
   
   # Beginning message
   ## ToDo: Add more models' beginning message

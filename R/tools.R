@@ -192,7 +192,6 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
 #' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
 #' @param api_url A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other url .default is OpenAI. for gemini, you just input "https://generativelanguage.googleapis.com/"
 #' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @param ... Variable parameter lists allow you to input additional parameters supported by the model you're using. Note: You must ensure the validity of the parameters you enter; otherwise, an error will occur.
 #' @return Prints a message to the console indicating whether the API key setup was successful.
 #' If the setup fails, the function stops with an error message.
 #'
