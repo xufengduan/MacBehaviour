@@ -33,7 +33,8 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 ## Table of Contents
 - [Supported Model Platforms](#supported-model-platforms)
 - [Supported Models](#supported-models)
-- [Installation](#installation)
+- ⭐️[Installation](#installation)
+- ⭐️[Demo code](#demo-code)
 - [Tutorial](#tutorial)
   - [1. Communicate with models](#1-communicate-with-models)
   - [2. Experiment design](#2-experiment-design)
@@ -93,6 +94,27 @@ Upon the successful installation, users can load this package into the current R
 ``` R
 library("MacBehaviour")
 ```
+## Demo code
+```R
+# Communicate with LLMs (refer to the tutorial for instructions on obtaining the API key)
+setKey(api_key = "YOUR_API_KEY", model = "MODEL_ID") 
+
+# Load the stimuli (experimental design is based on specific columns in the stimuli file)
+# Example data can be found in the Material folder (https://github.com/xufengduan/MacBehaviour/tree/main/Materials)
+df = read.xlsx("Data_OTPR.xlsx")
+
+# Standardize the data frame
+ExperimentItem = loadData(runList = df$Run, itemList = df$Item, eventList = df$Event, conditionList = df$Condition, promptList = df$Prompt)
+
+# Input experiment-specific parameters here
+Design = experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+
+# Input model-specific parameters here
+gptConfig = preCheck(systemPrompt = "You are a participant in a psychological experiment.", data = Design, n = 3, max_tokens = 2)
+
+# Run the experiment!
+runExperiment(gptConfig, savePath = "./demo.xlsx")
+
 
 ## Tutorial
 ### 1\. Communicate with models
