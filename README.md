@@ -114,7 +114,7 @@ gptConfig = preCheck(systemPrompt = "You are a participant in a psychological ex
 
 # Run the experiment!
 runExperiment(gptConfig, savePath = "./demo.xlsx")
-
+```
 
 ## Tutorial
 ### 1\. Communicate with Models
