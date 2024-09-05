@@ -27,7 +27,7 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 
 ## News
 
-2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face.
+2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face.<br>
 2024-July-2: Support models on Qianfan Baidu (百度千帆大模型平台).
 
 ## Table of Contents
