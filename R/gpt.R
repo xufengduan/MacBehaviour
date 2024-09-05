@@ -105,22 +105,33 @@ openai_chat <- function(
   response_text <- NULL  
   response_content <- NULL
   
-  log_file_path <- Sys.getenv("LOG_FILE")
-  log_file_connection <- file(log_file_path, open = "a")
   
   tryCatch({
-    sink(log_file_connection, append = TRUE, type = "message")
-    res <- POST(
-      url = Sys.getenv("url"),
-      body = toJSON(args),
-      add_headers(
-        'Content-Type' = 'application/json',
-        'Authorization' = paste('Bearer', Sys.getenv("key")),
-        'X-use-cache' = "false"
-      ),
-      verbose(data_out = TRUE, data_in = TRUE, info = FALSE)
-    )
-    sink(type = "message")
+    
+    if (Sys.getenv("LOG_FILE") != "") {
+      log_file_path <- Sys.getenv("LOG_FILE")
+      log_file_connection <- file(log_file_path, open = "a")
+      sink(log_file_connection, append = TRUE, type = "message")
+      res <- POST(
+        url = Sys.getenv("url"),
+        body = toJSON(args),
+        add_headers(
+          'Content-Type' = 'application/json',
+          'Authorization' = paste('Bearer', Sys.getenv("key")),
+          'X-use-cache' = "false"),
+        verbose(data_out = TRUE, data_in = FALSE, info = FALSE)
+      )
+      sink(type = "message")
+    } else {
+      res <- POST(
+        url = Sys.getenv("url"),
+        body = toJSON(args),
+        add_headers(
+          'Content-Type' = 'application/json',
+          'Authorization' = paste('Bearer', Sys.getenv("key")),
+          'X-use-cache' = "false"
+        )
+      )}
     # message("openai_chat_Model: ", model)
     # message("openai_chat_Url: ", Sys.getenv("url"))
     # message("openai_chat_Args: ", args)

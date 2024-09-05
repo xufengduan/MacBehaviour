@@ -528,12 +528,13 @@ run_baichuan <- function(gptConfig, savePath) {
 #' @param gptConfig A list containing the configuration for the GPT model, including the system prompt,
 #' model specifications, token settings, and experiment mode.
 #' @param savePath The file path where the experiment results will be saved in Excel format.
+#' @param log A logical value indicating whether to log the experiment results. Defaults to FALSE.
 #'
 #' @return This function does not return a value but executes the experiment scenarios and
 #' compiles the results in an Excel file. It prints "Done." to the console upon completion.
 #'
 #' @noRd
-run_LLMs <- function(gptConfig, savePath) {
+run_LLMs <- function(gptConfig, savePath, log = FALSE) {
   initializeData <- function(data) {
     data$Response <- NA
     data$N <- NA
@@ -552,6 +553,10 @@ run_LLMs <- function(gptConfig, savePath) {
     Completion_mode = TRUE
   }
   
+  if (log) {
+    log_file_name <- paste0("request_log_", format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), ".txt")
+    Sys.setenv(LOG_FILE = log_file_name)
+  }
   
   # Create work book and sheet
   createWorkbookAndSheet <- function(data) {
@@ -659,7 +664,13 @@ run_LLMs <- function(gptConfig, savePath) {
     csvFlag <- TRUE
   }
   
-  total_iterations <- nrow(data) * n
+        
+  if (grepl("^sk", Sys.getenv("key"))&&Completion_mode == FALSE) {
+      total_iterations <- nrow(data) * n
+    } else {
+      total_iterations <- nrow(data)
+    }
+
   current_progress <- 0
   progress_bar <- utils::txtProgressBar(min = 0, max = total_iterations, style = 3)
   utils::setTxtProgressBar(progress_bar, current_progress)
@@ -736,9 +747,11 @@ run_LLMs <- function(gptConfig, savePath) {
           # message(result)
           content_list <- result$content_list
           raw_temp <- result$raw_response
+          message("run_LLMs_content_list: ",content_list)
           
           for (nr in seq_along(content_list)) {
             t_data$Response <- handle_response(content_list[nr])
+            # message("run_LLMs_Response: ",t_data$Response)
             t_data$N <- nr
             if (n == 1 && Completion_mode != TRUE) {
               messages <- addMessage(messages, assistant, content_list[nr])
@@ -780,4 +793,5 @@ run_LLMs <- function(gptConfig, savePath) {
   saveResults(wb, savePath, csvFlag)
   close(progress_bar)
   message("Done.")
+  closeAllConnections()
 }
