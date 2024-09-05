@@ -13,19 +13,32 @@
 # MacBehaviour: Conduct Psychological Experiments on LLMs
 
 </div>
+<img width="859" alt="image" src="https://github.com/user-attachments/assets/08b8327d-20d7-4a17-ab0a-15b5c65033b2">
 
 
-The `MacBehaviour` R package offers a user-friendly toolkit forreplicating classic experiments on Large langauge models(LLMs). The package provides a suite of functions tailored for experiments with LLMs, including those from OpenAI's GPT series, Llama series in Huggingface, and open-source models.
+
+
+<br><br>
+The `MacBehaviour` R package offers a user-friendly toolkit for conducting  psychological experiments on over 100 Large langauge models(LLMs) in a few lines.
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
-<br><br>The version available from the CRAN maybe out of date, but you can find the corresponding tutorial from <a href="https://doi.org/10.31234/osf.io/ywtfd">here.</a>
 
 <div id="installing-and-loading-necessary-packages" class="section level3">
 
 ## News
 
+2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face.
 2024-July-2: Support models on Qianfan Baidu (百度千帆大模型平台).
 
+## Table of Contents
+- [Supported Model Platforms](#supported-model-platforms)
+- [Supported Models](#supported-models)
+- [Installation](#installation)
+- [Tutorial](#tutorial)
+  - [1. Communicate with models](#1-communicate-with-models)
+  - [2. Experiment design](#2-experiment-design)
+  - [3. Demo experiments](#3-demo-experiments)
+  - [4. Result structure](#4-result-structure)
 
 
 ## Supported Model Platforms
@@ -34,14 +47,15 @@ This package enables local deployment of LLMs through **FastChat** (https://gith
 
 If you prefer using cloud-based models, this package currently supports the following platforms:
 
-1. OpenAI (https://platform.openai.com/)
-2. Hugging face (https://huggingface.co/).
-3. Claude (https://www.anthropic.com/api)
-4. Gemini (https://ai.google.dev/)
-5. Qianfan Baidu (https://qianfan.cloud.baidu.com/)
-6. Baichuan (https://platform.baichuan-ai.com/)
+1. [OpenAI](https://platform.openai.com/)
+2. [Hugging Face](https://huggingface.co/)
+3. [Claude](https://www.anthropic.com/api)
+4. [Gemini](https://ai.google.dev/)
+5. [Qianfan Baidu](https://qianfan.cloud.baidu.com/)
+6. [Baichuan](https://platform.baichuan-ai.com/)
+7. [AI/ML](https://aimlapi.com/)
 
-## Supported Models:
+## Supported Models
 
 | Model                                                     | Developer/Platform                |
 | :-------------------------------------------------------- | --------------------------------- |
@@ -51,12 +65,10 @@ If you prefer using cloud-based models, this package currently supports the foll
 | Llama  family  (Llama-2,  Llama-3)                        | Meta  (Touvron et al., 2023)      |
 | BaiChuan family  (7B, 13B et al)                          | Baichuan (Yang et al., 2023)      |
 | 50+  other self-hosted LLMs  (e.g.,  Vicuna, FastChat-T5) | FastChat (Zheng  et al., 2023)    |
+| 200+ other cloud-hosted LLMs	                            | AI/ML API (AI/ML API, 2024)       |
 
 
-
-## Tutorial
-
-### 1\. Install and load package:
+## Installation
 
 There are two ways for installing this package: from Git hub or CRAN
 
@@ -76,20 +88,18 @@ Or you can install the package from CRAN by
 ```
 
 
-
 Upon the successful installation, users can load this package into the current R session:
 
 ``` R
 library("MacBehaviour")
 ```
 
-
-
-### 2\. Set API Key:
+## Tutorial
+### 1\. Communicate with models
 
 Authenticate with LLMs using an API key.
 
-    setKey(api_key = "YOUR_API_KEY", api_url = "YOUR_MODEL_URL", model = "YOUR_MODEL")
+    setKey(api_key = "YOUR_API_KEY", model = "YOUR_MODEL")
     
     # you need to input an additional argument secrect_key = "YOUR_SCRECT_KEY" here to access to Baidu Qianfan platform.
     
@@ -97,32 +107,53 @@ Authenticate with LLMs using an API key.
     
     ## "Setup api_key successful!"
 
-Arguments: Replace `YOUR_OPENAI_API_KEY` with your personal key.
+Arguments: Replace `YOUR_OPENAI_API_KEY` and  `YOUR_MODEL` with your personal key and selected model index.
 
-1) The "api_key" argument in this function requires your personal API key from OpenAI or Hugging Face. Please fill "NA", if you are using a self-deployed model. API enables authenticated access to language models. Researchers interested in obtaining OpenAI API key should first sign up on the OpenAI platform (https://platform.openai.com/). After registration, navigate to your account settings where you can generate your personal API key. Similarly, for integrating Hugging Face models into your research, an API key specific to Hugging Face is required. This can be obtained by creating an account on the Hugging Face platform (https://huggingface.co/). Once you are logged in, access your account settings, and find the "access token" to generate your Hugging Face API key. Please note that as the model inference needs GPUs, you may need to pay inference cost to OpenAI (https://openai.com/pricing) or Hugging Face (https://huggingface.co/blog/inference-pro) for using Llama series.
+1) The "api_key" argument, required, needs the user's personal API (Application Programming Interface) from OpenAI, Hugging Face, or other companies. If users are using a self-hosted model, please enter "NA." API enables authenticated access to language models. Researchers interested in obtaining OpenAI API key should first sign up on the OpenAI platform (https://platform.openai.com/). After registration, navigate to user’s account settings where user can generate personal API key. Similarly, for Hugging Face models, an API key specific to Hugging Face is required. This can be obtained by creating an account on the Hugging Face platform (https://huggingface.co/). Once you are logged in, access your account settings, and find the "access token" to generate Hugging Face API key. Please note that model inference requires computational resources, and users may need to pay for inference costs. You can find pricing details for OpenAI (https://openai.com/pricing) and Hugging Face (https://huggingface.co/blog/inference-pro). 
 
-2) The "api_url" argument, a character vector, specifies the interface domain of the selected model. For experiments using the GPT family, the URLs are documented in OpenAI's API reference (https://platform.openai.com/docs/api-reference/authentication). For Llama-2 models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md).
-Here, users can modify how a language model generates responses by adjusting the "api_url". There are two modes for generating output from an LLM: "text completion" and "chat completion" (for details, please see https://platform.openai.com/docs/guides/text-generation/chat-completions-vs-completions). The "text completion" mode requires only a preamble as input, after which the model autonomously generates the remaining text (for GPT-3.5, the api_url for text completion is "https://api.openai.com/v1/completions"; "http://localhost:8000/v1/chat/completions" for self-hosted models). Conversely, "chat completion" is a mode for constructing a conversation between a human user and the language model assistant. Therefore, this approach requires a clear definition of roles (assistant vs. user) and a specific prompt for the model to follow for a task (e.g., "Please complete the following preamble..." for text completion). To engage GPT-3.5 in chat completion mode, use the URL https://api.openai.com/v1/chat/completions. For the self-hosted model, access "http://localhost:8000/v1/completions".
+2) The "model" argument, required, a character vector, specifies the index of the selected model. For OpenAI models, you can find the list of available model indexes here: (https://platform.openai.com/account/limits). For Hugging Face models, the model name corresponds to the repository name (e.g., meta-llama/Llama-2-13b-hf). A list of available models can be found (https://huggingface.co/models?inference=warm&other=text-generation-inference&sort=trending). For self-hosted models, users can find the model's name at the model’s corresponding repository (for a summary, see https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md).
 
-3) The "model" argument, a character vector, specifies the index of the selected model. For OpenAI models, you can find the list of available model indexes here: (https://platform.openai.com/account/limits). For self-hosted models, users can find the model's name at the model’s corresponding repository (for a summary, see https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md).
+3) The "api_url" argument, optional, a character vector, specifies the interface domain of the selected model. By default, the system will automatically determine the appropriate URL based on the user’s "api_key". Users can still specify a custom api_url, which will take precedence. For experiments using the GPT family, the URLs are documented in OpenAI's API reference (https://platform.openai.com/docs/api-reference/authentication). For Llama models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md).
 
 </div>
 
 <div id="experiment-design" class="section level3">
 
 
-### 3\. Experiment design:
+### 2\. Experiment design:
 
 "MacBehaviour" can implement an experiment in two types of designs. 
+
 **1) multiple-trials-per-run design** resembles typical psychological experiments, where a human participant encounters multiple trials in an experiment. Here, you present multiple experimental trials, one by one, to an LLM in a single conversation. Note that earlier input and output will serve as the context for a current trial. 
+
+<img width="442" alt="MTPR" src="https://github.com/user-attachments/assets/8a03e224-b753-43c8-abaa-9170299bc97f">
+
+
 **2) one-trial-per-run design**, you only present a single trial of prompt and stimulus to an LLM in a conversation, and you present another trial in a new conversation.
 
-To illustrate these designs and how to construct the experimental stimuli, we next use a demo experiment. Cassidy et al. (1999) showed that speakers of English can infer the gender of novel personal names from phonology. In particular, when asked to complete a sentence fragment (e.g., *After Corlak/Corla went to bed …*), people tend to use a masculine pronoun for names ending in a closed syllable (e.g., *Corlak*) but a feminine pronoun for those ending in an open syllable (e.g., *Corla*). Cai et al. (2023) replicated the experiment with ChatGPT and Vicuna and obtained a similar phonology-gender association in these LLMs. In the following parts, we show how to use the "MacBehaviour" package, using this experiment as an example. Following Cai et al. (2023), in our demo, we ask an LLM to complete sentence fragments and observe how the model refers to the novel personal name (e.g., using masculine pronouns such as *he/him/his* or feminine ones such as *she/her/hers*).
+<img width="419" alt="OTPR" src="https://github.com/user-attachments/assets/999fac7e-e093-495f-ab45-1bd1ed1d6a18">
+
+
+
+### 3\. Demo experiments:
+To illustrate these designs and how to construct the experimental stimuli, we next use a demo experiment. 
+
+Cassidy et al. (1999) showed that speakers of English can infer the gender of novel personal names from phonology. 
+
+In particular, when asked to complete a sentence fragment:
+
+ *After Corlak/Corla went to bed …*
+
+People tend to use a masculine pronoun for names ending in a closed syllable (e.g., *Corlak*) but a feminine pronoun for those ending in an open syllable (e.g., *Corla*). 
+
+In our demo, we ask an LLM to complete sentence fragments and observe how the model refers to the novel personal name (e.g., using masculine pronouns such as *he/him/his* or feminine ones such as *she/her/hers*).
 
 1. **multiple-trials-per-run design**,
-Before using this package, users should prepare one Excel file/data frame containing the experimental stimuli and other information for experiment design (see Table 3). The Excel file/data frame should exhibit a structured format, defining columns for "Run", "Item", "Condition", and "Prompt", with each row standing for a unique stimulus (see Table 3 for a description of these terms and Table 4 for an example). This organization is pivotal for keeping the integrity of the experimental design, ensuring each stimulus is correctly identified and presented as your experiment design during the experiment.
+Before using this package, users should prepare one Excel/CSV file/data frame containing the experimental stimuli and other information for experiment design (see Table 1).
 
-   **Table 3**. The data frame structure 
+
+
+   **Table 1**. **The data frame structure**
 
    | **Column**    | **Description**                                              |
    | ------------- | ------------------------------------------------------------ |
@@ -133,9 +164,13 @@ Before using this package, users should prepare one Excel file/data frame contai
 
    **Note.** Each row stands for a unique stimulus in the data frame/sheet.
 
-   
+The Excel file/data frame should exhibit a structured format, defining columns for "Run", "Item", "Condition", and "Prompt", with each row standing for a unique stimulus (see Table 1 for a description of these terms and Table 2 for an example). 
 
-   **Table 4**. An exemplar stimulus file in a multiple-trials-per-run design
+In the multiple-trials-per-run design, multiple trials (four trials in our demo) are presented in a single conversation (Run). 
+
+In each Run, the package will send the stimulus based on the index of row. Users can randomize item order within Runs in the function "experimentDesign" later. The LLM will use input (prompts and stimuli) and model output (responses) in earlier trials as its context (see Figure 1 for an example of conversation/Run).
+
+   **Table 2**. **An exemplar stimulus file in a multiple-trials-per-run design**
 
    | **Run** | **Item** | **Condition**    | **Prompt**                                                   |
    | ------- | -------- | ---------------- | ------------------------------------------------------------ |
@@ -148,7 +183,6 @@ Before using this package, users should prepare one Excel file/data frame contai
    | 2       | 3        | Closed  syllable | Please repeat the fragment and complete it  into a full sentence: When Hispad was going to work … |
    | 2       | 4        | Open  syllable   | Please repeat the fragment and complete it  into a full sentence: Before Bontee went to college … |
 
-    In the multiple-trials-per-run design (see Table 4), multiple trials (four trials in our demo) are presented in a single conversation (Run). In each Run, the package will send the stimulus based on the index of row. Users can randomize item order within Runs in the function "experimentDesign" later. The LLM will use input (prompts and stimuli) and model output (responses) in earlier trials as its context (see Figure 1 for an example of conversation/Run).
 
    There are two roles in the context: "user" (for sending stimuli) and "assistant" (as a participant to provide responses). To achieve the above conversation, this package sends the stimuli in the following format for OpenAI GPT series/open-source models and Llama2:
 
@@ -180,11 +214,11 @@ Before using this package, users should prepare one Excel file/data frame contai
 
 2. **one-trial-per-run design**
 
-    In the one-trial-per-run design, an LLM will be presented only one trial of the experiment in a Run/conversation. In our demo experiment (see Table 5), for instance, each conversation with the LLM involves only one stimulus. In this design, each stimulus is given a unique Run number, indicating that each one is to be presented in a separate conversation with the LLM. This design eliminates the potential for previous context to influence the response of current stimulus, ensuring that each stimulus is evaluated independently.
+    In the one-trial-per-run design, an LLM will be presented only one trial of the experiment in a Run/conversation. In our demo experiment (see Table 3), for instance, each conversation with the LLM involves only one stimulus. In this design, each stimulus is given a unique Run number, indicating that each one is to be presented in a separate conversation with the LLM. This design eliminates the potential for previous context to influence the response of current stimulus, ensuring that each stimulus is evaluated independently.
 
     
 
-   **Table 5**. Stimuli for one-trial-per-run design
+   **Table 3**. **Stimuli for one-trial-per-run design**
 
    | **Run** | **Item** | **Condition**   | **Prompt**                                                   |
    | ------- | -------- | --------------- | ------------------------------------------------------------ |
@@ -198,9 +232,6 @@ Before using this package, users should prepare one Excel file/data frame contai
    | 8       | 4        | Closed syllable | Please repeat the fragment and complete it  into a full sentence: Before Bonteed went to college … |
 
     
-
-    
-
 
 Load your stimuli from an Excel file.
 
@@ -245,7 +276,6 @@ The "loadData" function maps vectors or data frame columns to specific keywords.
 
 4) The "promptList", required, a character vector, maps to the column for "Prompt", which contains the actual prompts that will be presented to the model during the experiment. Each element under this column is a unique prompt the language model will process and respond to. 
 
-This package can also interface with models that support multimodal input, such as GPT-4V (https://platform.openai.com/docs/guides/vision) and llava (Liu et al., 2023). For multimodal models, use the labels &lt;text&gt;, &lt;audio&gt;, and &lt;img&gt; to indicate text prompts, audio inputs, and image inputs respectively. End these with &lt;/text&gt;, &lt;/audio&gt;, and &lt;/img&gt;. For online models like GPT-4V, include the picture download URL; for self-hosted models like llava, users can also use the picture file path. If the study doesn’t involve input other than text, simply input the text stimuli without using the &lt;text&gt; label.
 
 The output of this function, "ExperimentItem", is a data frame generated by "loadData", which includes all the necessary details for each stimulus. The accuracy of "loadData" in mapping the CSV spreadsheet/data frame to the "ExperimentItem" is of pivotal importance, as it ensures that each stimulus is precisely presented according to the experimental design.
 
@@ -262,7 +292,7 @@ The output of this function, "ExperimentItem", is a data frame generated by "loa
 <div id="model-parameters" class="section level3">
 
 
-### 4\. Model parameters
+3. **Model parameters**
 
 The model parameters are configured to guide the behaviour of the model during the experiment in the "preCheck" function:
 
@@ -294,8 +324,8 @@ gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a p
     #	CheckItem			Values
     # 1	item numbers		   4000
     # 2	max_token_numbers	    137
-    In the report, the "item numbers" show the number of items you have (number of items × number of sessions). The value of "max_token_numbers" signifies the maximum token length among all experimental items. It should not exceed the input token limit of an LLM. 
     ```
+    In the report, the "item numbers" show the number of items you have (number of items × number of sessions). The value of "max_token_numbers" signifies the maximum token length among all experimental items. It should not exceed the input token limit of an LLM. 
 
     ```r
     # Multiple-trials-per-run design
@@ -303,8 +333,10 @@ gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a p
     # 1		    1756
     # 2 		2016
     # …
-    In the report for multiple-trials-per-run design, the package computes the input for the last trial of a run—incorporating all previous conversation history—based on the maximum token count. This is calculated as (systemPrompt + max_tokens) × number of trials + previous conversation history + tokens from the last item; it then reports this total for each run. Please make sure that the max token per run does not exceed the token limit of your selected LLM. The following is an example report. 
     ```
+    
+    In the report for multiple-trials-per-run design, the package computes the input for the last trial of a run—incorporating all previous conversation history—based on the maximum token count. This is calculated as (systemPrompt + max_tokens) × number of trials + previous conversation history + tokens from the last item; it then reports this total for each run. Please make sure that the max token per run does not exceed the token limit of your selected LLM. The following is an example report. 
+
 5) The "logprobs", optional, a boolean vector, specifies whether to return the log probabilities of output tokens in the chat completion mode. It appends the log probability for each token in the response under the "rawResponse" column. Additionally, users can define how many top probable tokens to display at each token position by introducing a numeric vector “top_logprobs” (https://platform.openai.com/docs/api-reference/chat/create#chat-create-logprobs), which ranges from 0 to 20, showing their corresponding log probabilities. Please note that "logprobs" must be active for this feature to work. Setting it to 2 returns the two most likely tokens at that position. For instance, if "logprobs" is set to TRUE and "top_logprobs" is set to 2, a generated response might be: “Hello! How can I assist you today?” For the first token “Hello”, two alternatives are provided:
 
 ``` {"top_logprobs": [{"token": "Hello", "logprob": -0.31725305}, {"token": "Hi", "logprob": -1.3190403}]}```
@@ -321,8 +353,7 @@ In addition to the parameters mentioned above, users can also enter optional one
 
 <div id="run-the-experiment" class="section level3">
 
-
-### 5\. Data collection
+4. **Run the experiment**
 
 1. The "runExperiment" function is the execution phase of data collection. It initiates the interaction with an LLM based on the specified design and parameters, and iteratively collects responses to the stimuli.
 
@@ -341,7 +372,7 @@ runExperiment (gptConfig, savePath = "./demo.xlsx")
 
 
 
-### 6\. Result structure
+### 4\. Result structure
 
 Upon the completion of the experiment, the responses are compiled into a file. This file consists of multiple columns including Run, ItemID, Condition, Prompt, the corresponding response from the LLM and other information. The output file typically has the following columns:
 
@@ -361,6 +392,7 @@ Upon the completion of the experiment, the responses are compiled into a file. T
 | **n**         | The response index in a single request.                    |
 | **Trial**     | The turn index of a conversation.                          |
 | **Message**   | The actual prompt sending to an LLM.                       |
+| **RawResponse**| The raw response from Model's API.                       |
 
 </div>
 
