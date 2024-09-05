@@ -13,12 +13,13 @@ llama_chat <- function(
     ...
 ){
 
-  if (is.null(Sys.getenv("key"))) {
-    stop("api_key is required.")
+  api_key <- Sys.getenv("key")
+  if (api_key == "") {
+    stop("API key is required.")
   }
 
   headers <- c(
-    'Authorization' = paste('Bearer', Sys.getenv("key")),
+    'Authorization' = paste('Bearer', api_key),
     'Content-Type' = 'application/json'
   )
 
@@ -26,11 +27,12 @@ llama_chat <- function(
     inputs = messages,
     parameters = modifyList(list(return_full_text = FALSE), list(...)),
     options = list(
-      use_cache = FALSE
+    use_cache = FALSE
     )
   )
 
-
+message(headers)
+message(body)
   tryCatch({
 
     res <- POST(
@@ -41,13 +43,15 @@ llama_chat <- function(
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
 
-    if(res$status_code != 200){
+    if(res$status_code != 200 && res$status_code != 201){
       response_content = paste("error with code:",res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
       stop(handle_error_code(res$status_code))
     }
+    
     response_text <- content(res, 'text', encoding = "UTF-8")
+    message(response_text)
 
     generated_text <-  content(res)[[1]]$generated_text
     content_list <- trimws(generated_text)
@@ -81,54 +85,68 @@ llama_chat <- function(
 #' @return A list of character strings containing the ChatGPT's responses.
 #' @noRd
 openai_chat <- function(
-    messages = list(list(role = "user", content = "Please repeat 'Setup successful'. DON'T say anything else.")),
+    messages = list(list(role = "user", content = "Please repeat 'Setup Successful'. DON'T say anything else.")),
     model = Sys.getenv("model"),
     ...
 ){
+  
   if (is.null(Sys.getenv("key"))) {
     stop("API key is not set.")
   }
 
-  headers <- c(
-    'Authorization' = paste('Bearer', Sys.getenv("key")),
-    'Content-Type' = 'application/json'
-  )
 
   args <- list(
+    model = model,
     messages = messages,
-    model = model
+    ...
   )
 
+  content_list <- NULL  
+  response_text <- NULL  
+  response_content <- NULL
+  
+  log_file_path <- Sys.getenv("LOG_FILE")
+  log_file_connection <- file(log_file_path, open = "a")
+  
   tryCatch({
-
+    sink(log_file_connection, append = TRUE, type = "message")
     res <- POST(
       url = Sys.getenv("url"),
-      body = modifyList(args, list(...)),
-      add_headers(headers),
-      encode = "json",
-      config = config(ssl_verifypeer = 0L, timeout = 300)
+      body = toJSON(args),
+      add_headers(
+        'Content-Type' = 'application/json',
+        'Authorization' = paste('Bearer', Sys.getenv("key")),
+        'X-use-cache' = "false"
+      ),
+      verbose(data_out = TRUE, data_in = TRUE, info = FALSE)
     )
-
-    if(res$status_code != 200){
-      response_content = paste("error with code:",res$status_code)
+    sink(type = "message")
+    # message("openai_chat_Model: ", model)
+    # message("openai_chat_Url: ", Sys.getenv("url"))
+    # message("openai_chat_Args: ", args)
+    # message("openai_chat_Key: ", Sys.getenv("key"))
+    # message("openai_chat_Message: ", toJSON(modifyList(args, list(...))))
+    
+    if(res$status_code != 200 && res$status_code != 201){
+      response_content <- paste("error with code:", res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
-      stop(handle_error_code(res$status_code))
+      stop(paste("Request failed with status code", res$status_code))
     }
-
+    
     response_text <- content(res, 'text', encoding = "UTF-8")
-
     res_json <- fromJSON(response_text)
-
     choices <- res_json$choices
-
     content_list <- sapply(choices, function(x) x$message$content)
   }, warning = function(war) {
     message(paste("Caught warning:", war$message))
   }, error = function(err) {
+    if (!is.null(response_content)) {
+      message(response_content)
+    }
     stop(err)
   })
-
+  
   result_list <- list(content_list = content_list, raw_response = response_text)
   
   return(result_list)
@@ -182,7 +200,7 @@ claude_chat <- function(
       encode = "json",
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
-    if(res$status_code != 200){
+    if(res$status_code != 200 && res$status_code != 201){
       response_content = paste("error with code:",res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
@@ -257,7 +275,7 @@ gemini_chat <- function(
     )
 
 
-    if(res$status_code != 200){
+    if(res$status_code != 200 && res$status_code != 201){
       response_content = paste("error with code:",res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
@@ -340,7 +358,7 @@ baichuan_chat <- function(
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
 
-    if(res$status_code != 200){
+    if(res$status_code != 200 && res$status_code != 201){
       response_content = paste("error with code:",res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
@@ -380,7 +398,7 @@ baichuan_chat <- function(
 #' @return A list of character strings containing the ChatGPT's responses.
 #' @noRd
 openai_completion <- function(
-  messages = list(),
+  prompt = "Please repeat 'Setup successful'. DON'T say anything else.",
   model = "gpt-3.5-turbo-instruct",
   ...
 ){
@@ -394,21 +412,32 @@ openai_completion <- function(
   )
 
   args <- list(
-    prompt = toJSON(messages),
+    prompt = prompt,
     model = model
   )
+  
+  log_file_path <- Sys.getenv("LOG_FILE")
+  log_file_connection <- file(log_file_path, open = "a")
 
   tryCatch({
+  
+    sink(log_file_connection, append = TRUE, type = "message")
 
     res <- POST(
       url = Sys.getenv("url"),
-      body = modifyList(args, list(...)),
-      add_headers(headers),
+      body = toJSON(args),  
+      add_headers(
+        'Content-Type' = 'application/json',
+        'Authorization' = paste('Bearer', Sys.getenv("key")),
+        'X-use-cache' = "false"
+      ),
       encode = "json",
-      config = config(ssl_verifypeer = 0L, timeout = 300)
+      verbose(data_out = TRUE, data_in = TRUE, info = FALSE)  # 捕获详细信息
     )
-
-    if(res$status_code != 200){
+    
+    sink(type = "message")
+    
+    if(res$status_code != 200 && res$status_code != 201){
       response_content = paste("error with code:",res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
@@ -453,7 +482,7 @@ wenxin_chat <- function(messages = list(list(role = "user", content = "Please re
     url_access_token <- paste0("https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=", api_key, "&client_secret=", secret_key)
     res <- GET(url_access_token)
     
-    if (res$status_code != 200) {
+    if (res$status_code != 200 && res$status_code != 201) {
       stop(paste("Error getting access token, status code:", res$status_code))
     }
     
@@ -465,20 +494,27 @@ wenxin_chat <- function(messages = list(list(role = "user", content = "Please re
   
   headers <- c('Content-Type' = 'application/json')
   
-  args <- list(messages = messages)
+  message("wenxin_chat: messages: ", messages)
+  args <- list(
+    messages = messages,
+    ...
+  )
   
-  model_url <- paste0(url, "?access_token=", access_token)
+  message("wenxin_chat: args: ", args)
+
 
   tryCatch({
     res <- POST(
-      url = model_url,
-      body = modifyList(args,list(...)),
+      #url = model_url,
+      url = paste0("https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/",model,"?access_token=",access_token),
+      body = toJSON(args),
       add_headers(headers),
       encode = "json",
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
+    message(res)
     
-    if (res$status_code != 200) {
+    if (res$status_code != 200 && res$status_code != 201) {
       response_content = paste("Error with code:", res$status_code)
       message(response_content)
       message(content(res, 'text', encoding = "UTF-8"))
