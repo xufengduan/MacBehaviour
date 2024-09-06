@@ -256,7 +256,7 @@ claude_chat <- function(
 #' @return A list of character strings containing the gemini's responses.
 #' @noRd
 gemini_chat <- function(
-  messages = list(),
+  messages = list(list(parts = list(list(text = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse.")))),
   model = Sys.getenv("model"),
   ...
 ){
@@ -275,15 +275,33 @@ gemini_chat <- function(
 
 
   current_url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/",model,":generateContent?key=",Sys.getenv("key"))
-  # "http://chat.cuhklpl.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCblcTdxArJNs8g-LvNaFLeQthRojqrUjY"
-  tryCatch({
 
-    res <- POST(
-      url = current_url,
-      body = body,
-      encode = "json",
-      config = config(ssl_verifypeer = 0L, timeout = 300)
-    )
+  tryCatch({
+    
+    if (Sys.getenv("LOG_FILE") != "") {
+      log_file_path <- Sys.getenv("LOG_FILE")
+      log_file_connection <- file(log_file_path, open = "a")
+      sink(log_file_connection, append = TRUE, type = "message")
+      res <- POST(
+        url = current_url,
+        body = body,
+        encode = "json",
+        config = config(ssl_verifypeer = 0L, timeout = 300),
+        verbose(data_out = TRUE, data_in = FALSE, info = FALSE)
+      )
+      sink(type = "message")
+    } else {
+      res <- POST(
+        url = current_url,
+        body = body,
+        encode = "json",
+        config = config(ssl_verifypeer = 0L, timeout = 300)
+        #verbose(data_out = TRUE, data_in = FALSE, info = FALSE)
+      )
+      }
+    
+
+    
 
 
     if(res$status_code != 200 && res$status_code != 201){

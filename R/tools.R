@@ -198,15 +198,16 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
 #' This function allows users to set and verify an API key for data collection. You can change the default api_url for others models' API.
 #'
 #'
-#' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key.Please fill 'NA' for self-deployed models.
-#' @param model  A character string: specify the model version.For gemini, you could input "gemini-pro"
-#' @param api_url A character string: the API URL for the model. If not specified, the default Chat completion URL will be used based on the api_key. For gemini, please just enter "https://generativelanguage.googleapis.com/".
+#' @param api_key A character string: the user's OpenAI/huggingface/gemini/claude/baichuan/other API key. Please fill 'NA' for self-deployed models.
+#' @param model  A character string: specify the model version. For gemini, you could input "gemini-pro"
+#' @param api_url A character string: the API URL for the model. If not specified, the default Chat completion URL will be used based on the api_key.
+#' @param ... Additional arguments to be passed (currently not used, but kept for future extensibility).
 #' @return Prints a message to the console indicating whether the API key setup was successful.
 #' If the setup fails, the function stops with an error message.
 #'
 #' @examples
 #' \dontrun{
-#' set_key(api_key="YOUR_API_KEY", api_url="api.openai.com/v1/chat/completions",model="gpt-3.5-turbo")
+#' set_key(api_key="YOUR_API_KEY", model="gpt-3.5-turbo", api_url="api.openai.com/v1/chat/completions")
 #' }
 #' @export
 setKey <- function(api_key,model,api_url = NULL,...){
@@ -228,7 +229,7 @@ setKey <- function(api_key,model,api_url = NULL,...){
     }
     else{
       # OpenAI or Huggingface
-      if (grepl("^hf|^sk", api_key)) {
+      if (grepl("^hf|^sk", api_key) && !grepl("-ant-", api_key)) {
         Sys.setenv(llm = "openai")
         if (grepl("hf", api_key)) {
           if (is.null(api_url)) {
@@ -256,6 +257,11 @@ setKey <- function(api_key,model,api_url = NULL,...){
       }
       else if(grepl("claude",tolower(model))){
         Sys.setenv(llm="claude")
+        if (is.null(api_url)) {
+          Sys.setenv(url = "https://api.anthropic.com/v1/messages")
+        } else {
+          Sys.setenv(url = api_url)
+        }
       }
       else if(grepl("gemini",tolower(model))){
         Sys.setenv(llm="gemini")
@@ -270,7 +276,8 @@ setKey <- function(api_key,model,api_url = NULL,...){
         Sys.setenv(llm="custom")
       }
     }
-
+    
+    message("setKey: ",Sys.getenv("llm"))
 
     Sys.setenv(key=api_key)
     # Sys.setenv(url=api_url)
@@ -284,14 +291,19 @@ setKey <- function(api_key,model,api_url = NULL,...){
       openai = list(chat = "openai_chat", completion = "openai_completion"),
       "llama-3" = list(chat = "llama_chat", completion = "llama_chat"),
       "llama-2" = list(chat = "llama_chat", completion = "llama_chat"),
-      baidubce = list(chat = "wenxin_chat", completion = "wenxin_chat")
+      baidubce = list(chat = "wenxin_chat", completion = "wenxin_chat"),
+      claude = list(chat = "claude_chat", completion = "claude_chat"),
+      gemini = list(chat = "gemini_chat", completion = "gemini_chat"),
+      baichuan = list(chat = "baichuan_chat", completion = "baichuan_chat"),
+      custom = list(chat = "openai_chat", completion = "openai_completion")
       # example_model = list(chat = "example_chat_function", completion = "example_completion_function")
     )
     chat_request <- model_request[[Sys.getenv("llm")]]$chat
     completion_request <- model_request[[Sys.getenv("llm")]]$completion
     # message(chat_request)
-    if (grepl("/chat/", Sys.getenv("url"))) {
+    if (grepl("/chat/", Sys.getenv("url"))|grepl("/message", Sys.getenv("url"))) {
       message("chat completion mode")
+      message("setKey: ",chat_request)
       message(c(do.call(chat_request, modifyList(list(
         model = model
       ), args))$content_list,"  Model - ",model))
