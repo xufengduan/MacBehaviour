@@ -76,7 +76,7 @@ There are two ways for installing this package: from Git hub or CRAN
 ```R
 # From github
 install.packages("devtools")
-devtools::install_github("xufengduan/MacBehaviour")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 
 ```
 
@@ -96,24 +96,36 @@ library("MacBehaviour")
 ```
 ## Demo Code
 ```R
-# Communicate with LLMs (refer to the tutorial for instructions on obtaining the API key)
-setKey(api_key = "YOUR_API_KEY", model = "MODEL_ID") 
 
-# Load the stimuli (experimental design is based on specific columns in the stimuli file)
-# Example data can be found in the Material folder (https://github.com/xufengduan/MacBehaviour/tree/main/Materials)
-df = read.xlsx("Data_OTPR.xlsx")
+# 1. Install and load the package
+install.packages("devtools")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+library("MacBehaviour")
 
-# Standardize the data frame
-ExperimentItem = loadData(runList = df$Run, itemList = df$Item, eventList = df$Event, conditionList = df$Condition, promptList = df$Prompt)
+# 2. Set API Key: authenticates API access for the models you are working with.
+setKey(api_key = "your_api_key_here", model = "meta-llama/Meta-Llama-3.1-70B-Instruct")
 
-# Input experiment-specific parameters here
-Design = experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
+For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>
 
-# Input model-specific parameters here
-gptConfig = preCheck(systemPrompt = "You are a participant in a psychological experiment.", data = Design, n = 3, max_tokens = 2)
+```R
+# 3. Load Data: organizes your experimental data from a data frame.
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
 
-# Run the experiment!
-runExperiment(gptConfig, savePath = "./demo.xlsx")
+```
+You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
+
+```R
+# 4. Set Experimental Design: structure your experiment and specify how items will be presented to the model.
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+
+# 5. Pre-Check the Experiment Configuration: Configures model parameters.
+gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+
+# 6. Run the Experiment
+runExperiment(gptConfig, savePath = "demo_results.csv")
+
 ```
 
 ## Tutorial
