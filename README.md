@@ -99,11 +99,11 @@ library("MacBehaviour")
 ```
 ## Demo Code - Hugging Face
 
-We have provided two demo codes (simplified versions) for you to try. This one is for Hugging Face models, while the next [Demo Code - OpenAI](#demo-code---openai) is for OpenAI models.
+We have provided two demonstration scripts for you to try: one for models hosted on Hugging Face and another for models from OpenAI.
 
-Since **Hugging Face offers free inference services** for certain models, you can begin experimenting with this package using Hugging Face instead of OpenAI.
+**Since Hugging Face offers free inference services for certain models, we recommend starting your experimentation with Hugging Face before using OpenAI.**
 
-If you want to learn more about this package, please refer to the [tutorial](#tutorial).
+If you want to learn more about this package, please refer to the detailed [tutorial](#tutorial).
 
 1. Install and load the package. You can skip it if you have already done it.
 ```R
