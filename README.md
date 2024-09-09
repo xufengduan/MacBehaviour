@@ -27,8 +27,8 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 
 ## News
 
-2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face.<br>
-2024-July-2: Support models on Qianfan Baidu (百度千帆大模型平台).
+2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face via Message API.<br>
+2024-July-2: Support models on Qianfan Baidu.
 
 ## Table of Contents
 - [Supported Model Platforms](#supported-model-platforms)
@@ -96,13 +96,13 @@ Upon the successful installation, users can load this package into the current R
 library("MacBehaviour")
 ```
 ## Demo Code - HuggingFace
-1. Install and load the package. you can skip it if you have already done it.
+1. Install and load the package. You can skip it if you have already done it.
 ```R
 install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 library("MacBehaviour")
 ```
-2. Communicate with one LLM: authenticates API access for the models you are working with.
+2. Communicate with one LLM.
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
 <br><br>
