@@ -72,7 +72,7 @@ If you prefer using cloud-based models, this package currently supports the foll
 
 ## Installation
 
-There are two ways for installing this package: from Git hub or CRAN
+There are two ways for installing this package: from Github or CRAN
 
 ```R
 # From github
