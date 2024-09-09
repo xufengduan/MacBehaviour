@@ -106,7 +106,7 @@ library("MacBehaviour")
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
 <br><br>
-For the model ID, you can use `meta-llama/Meta-Llama-3.1-8B-Instruct` or choose from <a href="[https://platform.openai.com/docs/models](https://huggingface.co/models?inference=warm&other=text-generation-inference&sort=trending)">this list of HuggingFace models</a>.
+For the model ID, you can use `meta-llama/Meta-Llama-3.1-8B-Instruct` or choose from <a href="https://huggingface.co/models?inference=warm&other=text-generation-inference&sort=trending">this list of HuggingFace models</a>.
 ```R
 setKey(api_key = "your_api_key_here", model = "meta-llama/Meta-Llama-3.1-8B-Instruct")
 ```
