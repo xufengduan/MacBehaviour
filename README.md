@@ -134,7 +134,7 @@ Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
 ```
 5. Configures model parameters.
 ```R
-gptConfig <- preCheck( data = Design, max_tokens = 500)
+gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
 ```
 6. Run the Experiment.
 ```R
