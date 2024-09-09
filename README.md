@@ -115,9 +115,9 @@ library("MacBehaviour")
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
 <br><br>
-For the model ID, you can use `google/gemma-2-2b-it` or choose from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.1 families).
+For the model ID, you can use `microsoft/Phi-3-mini-4k-instruct` or choose from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.1 families).
 ```R
-setKey(api_key = "your_api_key_here", model = "google/gemma-2-2b-it")
+setKey(api_key = "your_api_key_here", model = "microsoft/Phi-3-mini-4k-instruct")
 ```
 
 3. Load Data: organizes your experimental data from a data frame.
