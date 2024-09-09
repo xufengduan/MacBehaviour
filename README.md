@@ -21,7 +21,7 @@
 <br><br>
 The `MacBehaviour`(short for Machine Behaviour) R package offers a user-friendly toolkit for conducting  psychological experiments on over 100 Large langauge models(LLMs) in a few lines.
 
-Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---huggingface).
+**Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---huggingface).**
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 
@@ -98,9 +98,10 @@ Upon the successful installation, users can load this package into the current R
 library("MacBehaviour")
 ```
 ## Demo Code - Hugging Face
+
 We have provided two demo codes (simplified versions) for you to try. This one is for Hugging Face models, while the next [Demo Code - OpenAI](#demo-code---openai) is for OpenAI models.
 
-Since **Hugging Face offers free inference services** for certain models, you can begin experimenting with this package using Hugging Face.
+Since **Hugging Face offers free inference services** for certain models, you can begin experimenting with this package using Hugging Face instead of OpenAI.
 
 If you want to learn more about this package, please refer to the [tutorial](#tutorial).
 
@@ -140,6 +141,11 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
 ## Demo Code - OpenAI
+
+This script provides an example of how to use OpenAI models with the MacBehaviour package.
+
+If you want to learn more about this package, please refer to the [tutorial](#tutorial).
+
 1. Install and load the package. you can skip it if you have already done it.
 ```R
 install.packages("devtools")
