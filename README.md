@@ -13,7 +13,7 @@
 # MacBehaviour: Conduct Psychological Experiments on LLMs
 
 </div>
-<img width="859" alt="image" src="https://github.com/user-attachments/assets/08b8327d-20d7-4a17-ab0a-15b5c65033b2">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/93b6c073-ca3e-4821-961a-c552b977e6d0">
 
 
 
@@ -34,7 +34,8 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 - [Supported Model Platforms](#supported-model-platforms)
 - [Supported Models](#supported-models)
 - ⭐️[Installation](#installation)
-- ⭐️[Demo Code](#demo-code)
+- ⭐️[Demo Code - HuggingFace](#demo-code---huggingface)
+- ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
   - [2. Experiment Design](#2-experiment-design)
@@ -94,38 +95,77 @@ Upon the successful installation, users can load this package into the current R
 ``` R
 library("MacBehaviour")
 ```
-## Demo Code
+## Demo Code - HuggingFace
+1. Install and load the package. you can skip it if you have already done it.
 ```R
-
-# 1. Install and load the package
 install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 library("MacBehaviour")
-
-# 2. Set API Key: authenticates API access for the models you are working with.
-setKey(api_key = "your_api_key_here", model = "meta-llama/Meta-Llama-3.1-70B-Instruct")
-
 ```
-For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>
-
+2. Communicate with one LLM: authenticates API access for the models you are working with.
+<br><br>
+Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
+<br><br>
+For the model ID, you can use `meta-llama/Meta-Llama-3.1-8B-Instruct` or choose from <a href="[https://platform.openai.com/docs/models](https://huggingface.co/models?inference=warm&other=text-generation-inference&sort=trending)">this list of HuggingFace models</a>.
 ```R
-# 3. Load Data: organizes your experimental data from a data frame.
-df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
-ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
-
+setKey(api_key = "your_api_key_here", model = "meta-llama/Meta-Llama-3.1-8B-Instruct")
 ```
+
+3. Load Data: organizes your experimental data from a data frame.
+<br><br>
 You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
 
 ```R
-# 4. Set Experimental Design: structure your experiment and specify how items will be presented to the model.
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
+4. Set Experimental Design.
+```R
 Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
-
-# 5. Pre-Check the Experiment Configuration: Configures model parameters.
+```
+5. Configures model parameters.
+```R
 gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
-
-# 6. Run the Experiment
+```
+6. Run the Experiment.
+```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
+```
+## Demo Code - OpenAI
+1. Install and load the package. you can skip it if you have already done it.
+```R
+install.packages("devtools")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+library("MacBehaviour")
+```
+2. Communicate with one LLM: authenticates API access for the models you are working with.
+<br><br>
+Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
+<br><br>
+For the model ID, you can use `gpt-3.5-turbo` or choose from <a href="https://platform.openai.com/docs/models">this list of OpenAI models</a>.
+```R
+setKey(api_key = "your_api_key_here", model = "gpt-3.5-turbo")
+```
 
+3. Load Data: organizes your experimental data from a data frame.
+<br><br>
+You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
+
+```R
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
+4. Set Experimental Design.
+```R
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
+5. Configures model parameters.
+```R
+gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+```
+6. Run the Experiment.
+```R
+runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
 
 ## Tutorial
@@ -141,7 +181,7 @@ Authenticate with LLMs using an API key.
     
     ## "Setup api_key successful!"
 
-Arguments: Replace `YOUR_OPENAI_API_KEY` and  `YOUR_MODEL` with your personal key and selected model index.
+Arguments: Replace `YOUR_API_KEY` and  `YOUR_MODEL` with your personal key and selected model index.
 
 1) The "api_key" argument, required, needs the user's personal API (Application Programming Interface) from OpenAI, Hugging Face, or other companies. If users are using a self-hosted model, please enter "NA." API enables authenticated access to language models. Researchers interested in obtaining OpenAI API key should first sign up on the OpenAI platform (https://platform.openai.com/). After registration, navigate to user’s account settings where user can generate personal API key. Similarly, for Hugging Face models, an API key specific to Hugging Face is required. This can be obtained by creating an account on the Hugging Face platform (https://huggingface.co/). Once you are logged in, access your account settings, and find the "access token" to generate Hugging Face API key. Please note that model inference requires computational resources, and users may need to pay for inference costs. You can find pricing details for OpenAI (https://openai.com/pricing) and Hugging Face (https://huggingface.co/blog/inference-pro). 
 
