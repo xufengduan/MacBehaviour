@@ -95,7 +95,13 @@ Upon the successful installation, users can load this package into the current R
 ``` R
 library("MacBehaviour")
 ```
-## Demo Code - HuggingFace
+## Demo Code - Hugging Face
+We have provided two demo codes (simplified versions) for you to try. This one is for Hugging Face models, while the next [Demo Code - OpenAI](#demo-code---openai) is for OpenAI models.
+
+Since **Hugging Face offers free inference services** for certain models, you can begin experimenting with this package using Hugging Face.
+
+If you want to learn more about this package, please refer to the [tutorial](#tutorial).
+
 1. Install and load the package. You can skip it if you have already done it.
 ```R
 install.packages("devtools")
