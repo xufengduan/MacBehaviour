@@ -266,14 +266,13 @@ setKey <- function(api_key,model,api_url = NULL,...){
       else if(grepl("gemini",tolower(model))){
         Sys.setenv(llm="gemini")
       }
-      else if(grepl("llama-3",tolower(model))){
-        Sys.setenv(llm="llama-3")
-      }
-      else if(grepl("llama",tolower(model))){
-        Sys.setenv(llm="llama-2")
-      }
+      
       else{
         Sys.setenv(llm="custom")
+        if (is.null(api_url)) {
+          stop("Error: API URL cannot be NULL for custom models.")
+        }
+        Sys.setenv(url = api_url)
       }
     }
     
