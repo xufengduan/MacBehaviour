@@ -19,7 +19,7 @@
 
 
 <br><br>
-The `MacBehaviour` R package offers a user-friendly toolkit for conducting  psychological experiments on over 100 Large langauge models(LLMs) in a few lines.
+The `MacBehaviour`(short for Machine Behaviour) R package offers a user-friendly toolkit for conducting  psychological experiments on over 100 Large langauge models(LLMs) in a few lines.
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 
