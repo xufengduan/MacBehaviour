@@ -202,13 +202,13 @@ Arguments: Replace `YOUR_API_KEY` and  `YOUR_MODEL` with your personal key and s
 
 2) The "model" argument, required, a character vector, specifies the index of the selected model.
 <br><br>
-For OpenAI models, you can find the list of available model indexes here: (https://platform.openai.com/account/limits).
+For OpenAI models, you can find the list of available model indexes <a href="https://platform.openai.com/account/limits">here</a>.
 <br><br>
-For Hugging Face models, the model name corresponds to the repository name (e.g., meta-llama/Llama-2-13b-hf). A list of available models can be found (https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending). You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.1 families).
+For Hugging Face models, the model name corresponds to the repository name (e.g., meta-llama/Llama-2-13b-hf). A list of available models can be found <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">here</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.1 families).
 <br><br>
-For self-hosted models, users can find the model's name at the model’s corresponding repository (for a summary, see https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md).
+For self-hosted models, users can find the model's name at the model’s corresponding repository (for a summary, see <a href="https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md">here</a>).
 
-4) The "api_url" argument, optional, a character vector, specifies the interface domain of the selected model. By default, the system will automatically determine the appropriate URL based on the user’s "api_key". Users can still specify a custom api_url, which will take precedence. For experiments using the GPT family, the URLs are documented in OpenAI's API reference (https://platform.openai.com/docs/api-reference/authentication). For Llama models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md).
+4) The "api_url" argument, optional, a character vector, specifies the interface domain of the selected model. By default, the system will automatically determine the appropriate URL based on the user’s "api_key". Users can still specify a custom api_url, which will take precedence. For experiments using the GPT family, the URLs are documented in <a href="https://platform.openai.com/docs/api-reference/authentication">OpenAI's API reference</a>. For Llama models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see <a href = "https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md">here</a>).
 
 </div>
 
