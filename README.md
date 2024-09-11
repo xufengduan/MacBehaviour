@@ -303,7 +303,7 @@ In each Run, the package will send the stimulus based on the index of row. Users
 
     
 
-   The conversational context was provided as the beginning of the next trial’s prompt. In this example, the context included the first stimulus *Please repeat the fragment and complete it into a full sentence: Although Pelcra was sick …* and its response *Although Pelcra was sick, she remained determined to finish her project on time.* The prompt then presented the second stimulus *Please repeat the fragment and complete it into a full sentence: Because Steban was very careless …* after the conversational context. We implemented this function for Llama-2-chat-hf series in the same way (see more at [https://Huggingface.co/blog/llama2#how-to-prompt-llama-2](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)). 
+   The conversational context was provided as the beginning of the next trial’s prompt. In this example, the context included the first stimulus *Please repeat the fragment and complete it into a full sentence: Although Pelcra was sick …* and its response *Although Pelcra was sick, she remained determined to finish her project on time.* The prompt then presented the second stimulus *Please repeat the fragment and complete it into a full sentence: Because Steban was very careless …* after the conversational context. We implemented this function for Llama-2-chat-hf series in the same way (see <a href="https://huggingface.co/blog/llama2#how-to-prompt-llama-2">here</a> for details). 
 
     
 
@@ -437,14 +437,15 @@ gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a p
 ``` {"top_logprobs": [{"token": "Hello", "logprob": -0.31725305}, {"token": "Hi", "logprob": -1.3190403}]}```
 
 - This configuration also provides the two most probable tokens and their respective log probabilities for each subsequent token position. 
-In the text completion mode (detailed in "api_url" part in [Communicate with Models](#1-communicate-with-models)) in the GPT family, "logprobs" is limited to a numeric vector with a maximum value of 5; hence, users don’t need to specify candidates by "top_logprobs" (https://platform.openai.com/docs/api-reference/completions/create#completions-create-logprobs). For self-hosted models, currently, only text completion supports collecting token probabilities by setting logprobs to True. This randomly returns one token and its probability at a time, but users can continue requesting until they receive the desired token.
+In the text completion mode (detailed in "api_url" part in [Communicate with Models](#1-communicate-with-models)) in the GPT family, "logprobs" is limited to a numeric vector with a maximum value of 5;  For self-hosted models, currently, only text completion supports collecting token probabilities by setting logprobs to True. This randomly returns one token and its probability at a time, but users can continue requesting until they receive the desired token.
 
 6) imgDetail, optional, offers three settings for image input: low, high, or auto. This allows users to control the model's image processing and textual interpretation. By default, the model operates in "auto" mode, automatically selecting between low and high settings based on the input image size (see more for https://platform.openai.com/docs/guides/vision/low-or-high-fidelity-image-understanding). If inputs do not include images, please skip this parameter.
 
-7) The "temperature", optional, a numeric vector, controls the creativity in LLM’s responses (https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature). 
+7) The <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature">"temperature"</a>, optional, a numeric vector, controls the creativity in LLM’s responses. 
 
-8) The "n", optional, a numeric vector, determines how many unique and independent responses are produced by the model for a single trial. For example, if n = 20, users will get 20 unique responses for each request. However, in a multiple-trials-per-run design, this parameter is automatically disabled to prevent branching conversations (https://platform.openai.com/docs/api-reference/chat/create#chat-create-n). 
-In addition to the parameters mentioned above, users can also enter optional ones. For reference, you can consult OpenAI's documentation (https://platform.openai.com/docs/api-reference/chat/create) or that of the selected model.
+8) The <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-n">"n"</a>, optional, a numeric vector, determines how many unique and independent responses are produced by the model for a single trial. For example, if n = 20, users will get 20 unique responses for each request. However, in a multiple-trials-per-run design, this parameter is automatically disabled to prevent branching conversations.
+   
+In addition to the parameters mentioned above, users can also enter optional ones(for HuggingFace models see <a href = "https://huggingface.co/docs/huggingface_hub/main/en/package_reference/inference_client#huggingface_hub.InferenceClient.chat_completion">here</a>; for OpenAI models, please see <a href = "https://platform.openai.com/docs/api-reference/chat/create">here</a>).
 
 <div id="run-the-experiment" class="section level3">
 
