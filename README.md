@@ -399,7 +399,7 @@ gptConfig = preCheck (data = Design, checkToken = F, systemPrompt = "You are a p
 
  
 
-1)"data", required, a data frame, is the output of experimentDesign function.
+1) "data", required, a data frame, is the output of experimentDesign function.
 
 2) The "systemPrompt", optional, a character vector, offers a task instruction to the model analogous to the instructions given to participants in a psychological experiment. Should one wish to convey the instructions to the model through the trial prompt, one could leave this parameter blank or state some general instructions (e.g., "You are a participant in a psychological experiment, please follow the task instruction carefully"). By default, it is empty. If not, the package will send the systemPrompt content at the start of each run.
 
