@@ -132,7 +132,7 @@ ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList =
 ```R
 Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
 ```
-5. Configures model parameters. you can find more parameters <a href = "https://huggingface.co/docs/huggingface_hub/main/en/package_reference/inference_client#huggingface_hub.InferenceClient.chat_completion">here</a>.
+5. Configures model parameters. You can find more parameters <a href = "https://huggingface.co/docs/huggingface_hub/main/en/package_reference/inference_client#huggingface_hub.InferenceClient.chat_completion">here</a>.
 ```R
 gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
 ```
@@ -174,6 +174,7 @@ ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList =
 Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
 ```
 5. Configures model parameters.
+You can find more parameters <a href = "https://platform.openai.com/docs/api-reference/chat/create">here</a>.
 ```R
 gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
 ```
