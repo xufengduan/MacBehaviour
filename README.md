@@ -243,7 +243,8 @@ People tend to use a masculine pronoun for names ending in a closed syllable (e.
 
 In our demo, we ask an LLM to complete sentence fragments and observe how the model refers to the novel personal name (e.g., using masculine pronouns such as *he/him/his* or feminine ones such as *she/her/hers*).
 
-3.1 **multiple-trials-per-run design**,
+<em>**3.1 multiple-trials-per-run design**</em>
+
 Before using this package, users should prepare one Excel/CSV file/data frame containing the experimental stimuli and other information for experiment design (see Table 1).
 
 
