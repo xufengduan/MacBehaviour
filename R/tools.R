@@ -276,7 +276,7 @@ setKey <- function(api_key,model,api_url = NULL,...){
       }
     }
     
-    message("setKey: ",Sys.getenv("llm"))
+    # message("setKey: ",Sys.getenv("llm"))
 
     Sys.setenv(key=api_key)
     # Sys.setenv(url=api_url)
@@ -302,7 +302,7 @@ setKey <- function(api_key,model,api_url = NULL,...){
     # message(chat_request)
     if (grepl("/chat/", Sys.getenv("url"))|grepl("/message", Sys.getenv("url"))) {
       message("chat completion mode")
-      message("setKey: ",chat_request)
+      # message("setKey: ",chat_request)
       message(c(do.call(chat_request, modifyList(list(
         model = model
       ), args))$content_list,"  Model - ",model))
