@@ -87,13 +87,15 @@ message(body)
 openai_chat <- function(
     messages = list(list(role = "user", content = "Please repeat 'Setup Successful'. DON'T say anything else.")),
     model = Sys.getenv("model"),
+    max_retries = 6000, 
+    initial_wait_time = 10,  
+    max_wait_time = 6000, 
     ...
 ){
-  
+
   if (is.null(Sys.getenv("key"))) {
     stop("API key is not set.")
   }
-
 
   args <- list(
     model = model,
@@ -104,62 +106,72 @@ openai_chat <- function(
   content_list <- NULL  
   response_text <- NULL  
   response_content <- NULL
+  wait_time <- initial_wait_time
   
-  
-  tryCatch({
-    
-    if (Sys.getenv("LOG_FILE") != "") {
-      log_file_path <- Sys.getenv("LOG_FILE")
-      log_file_connection <- file(log_file_path, open = "a")
-      sink(log_file_connection, append = TRUE, type = "message")
-      res <- POST(
-        url = Sys.getenv("url"),
-        body = toJSON(args),
-        add_headers(
-          'Content-Type' = 'application/json',
-          'Authorization' = paste('Bearer', Sys.getenv("key")),
-          'X-use-cache' = "false"),
-        verbose(data_out = TRUE, data_in = FALSE, info = FALSE)
-      )
-      sink(type = "message")
-    } else {
-      res <- POST(
-        url = Sys.getenv("url"),
-        body = toJSON(args),
-        add_headers(
-          'Content-Type' = 'application/json',
-          'Authorization' = paste('Bearer', Sys.getenv("key")),
-          'X-use-cache' = "false"
+  for (attempt in 1:max_retries) {
+    tryCatch({
+      
+      if (Sys.getenv("LOG_FILE") != "") {
+        log_file_path <- Sys.getenv("LOG_FILE")
+        log_file_connection <- file(log_file_path, open = "a")
+        sink(log_file_connection, append = TRUE, type = "message")
+        res <- POST(
+          url = Sys.getenv("url"),
+          body = toJSON(args),
+          add_headers(
+            'Content-Type' = 'application/json',
+            'Authorization' = paste('Bearer', Sys.getenv("key")),
+            'X-use-cache' = "false"
+          ),
+          verbose(data_out = TRUE, data_in = FALSE, info = FALSE)
         )
-      )}
-    # message("openai_chat_Model: ", model)
-    # message("openai_chat_Url: ", Sys.getenv("url"))
-    # message("openai_chat_Args: ", args)
-    # message("openai_chat_Key: ", Sys.getenv("key"))
-    # message("openai_chat_Message: ", toJSON(modifyList(args, list(...))))
+        sink(type = "message")
+      } else {
+        res <- POST(
+          url = Sys.getenv("url"),
+          body = toJSON(args),
+          add_headers(
+            'Content-Type' = 'application/json',
+            'Authorization' = paste('Bearer', Sys.getenv("key")),
+            'X-use-cache' = "false"
+          )
+        )
+      }
+      
+      if(res$status_code == 200 || res$status_code == 201){
+        response_text <- content(res, 'text', encoding = "UTF-8")
+        res_json <- fromJSON(response_text)
+        choices <- res_json$choices
+        content_list <- sapply(choices, function(x) x$message$content)
+        break  
+      }
+
+      if(res$status_code == 429) {
+        message(paste("Too many requests. Retrying in", wait_time, "seconds..."))
+        Sys.sleep(wait_time)
+        wait_time <- min(wait_time * 3, max_wait_time)  # 增加等待时间，直到最大等待时间
+      } else {
+        response_content <- paste("error with code:", res$status_code)
+        message(response_content)
+        message(content(res, 'text', encoding = "UTF-8"))
+        stop(paste("Request failed with status code", res$status_code))
+      }
+      
+    }, warning = function(war) {
+      message(paste("Caught warning:", war$message))
+    }, error = function(err) {
+      if (!is.null(response_content)) {
+        message(response_content)
+      }
+      stop(err)
+    })
     
-    if(res$status_code != 200 && res$status_code != 201){
-      response_content <- paste("error with code:", res$status_code)
-      message(response_content)
-      message(content(res, 'text', encoding = "UTF-8"))
-      stop(paste("Request failed with status code", res$status_code))
+    if (attempt == max_retries) {
+      stop("Maximum retries exceeded. Unable to complete the request.")
     }
-    
-    response_text <- content(res, 'text', encoding = "UTF-8")
-    res_json <- fromJSON(response_text)
-    choices <- res_json$choices
-    content_list <- sapply(choices, function(x) x$message$content)
-  }, warning = function(war) {
-    message(paste("Caught warning:", war$message))
-  }, error = function(err) {
-    if (!is.null(response_content)) {
-      message(response_content)
-    }
-    stop(err)
-  })
+  }
   
   result_list <- list(content_list = content_list, raw_response = response_text)
-  
   return(result_list)
 }
 
