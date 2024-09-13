@@ -208,7 +208,7 @@ For Hugging Face models, the model name corresponds to the repository name (e.g.
 <br><br>
 For self-hosted models, users can find the model's name at the model’s corresponding repository (for a summary, see <a href="https://github.com/lm-sys/FastChat/blob/main/docs/model_support.md">here</a>).
 
-4) The "api_url" argument, optional, a character vector, specifies the interface domain of the selected model. By default, the system will automatically determine the appropriate URL based on the user’s "api_key". Users can still specify a custom api_url, which will take precedence. For experiments using the GPT family, the URLs are documented in <a href="https://platform.openai.com/docs/api-reference/authentication">OpenAI's API reference</a>. For Llama models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL ("for more information, see <a href = "https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md">here</a>).
+4) The "api_url" argument, optional, a character vector, specifies the interface domain of the selected model. By default, the system will automatically determine the appropriate URL based on the user’s "api_key". Users can still specify a custom api_url, which will take precedence. For experiments using the GPT family, the URLs are documented in <a href="https://platform.openai.com/docs/api-reference/authentication">OpenAI's API reference</a>. For Llama models available through Hugging Face, the model’s URL can be found in the respective model’s repository, such as " https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf". For self-hosted models, please fill this argument with the user’s local URL (for more information, see <a href = "https://github.com/lm-sys/FastChat/blob/main/docs/openai_api.md">here</a>).
 
 </div>
 
@@ -334,7 +334,6 @@ Load your stimuli from an Excel file.
 
     df = read.xlsx("/path/to/excel/demo.xlsx")
 
-The "read.xlsx" function from the "openxlsx" package reads the Excel file, converting it into a data frame within R. You can also import a data frame containing stimuli and experiment information through other functions. To accurately present the stimuli within the R environment, the "loadData" function is utilized, which organized the data from a data frame for further processing:
 
 <table>
 <thead>
