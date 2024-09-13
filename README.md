@@ -21,7 +21,7 @@
 <br><br>
 The `MacBehaviour`(short for Machine Behaviour) R package offers a user-friendly toolkit for conducting  psychological experiments on over 100 Large langauge models(LLMs) in a few lines.
 
-**Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---huggingface).**
+**Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---hugging-face).**
 
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 
@@ -36,7 +36,7 @@ For details and citation, please see the preprint: <a href="https://arxiv.org/ab
 - [Supported Model Platforms](#supported-model-platforms)
 - [Supported Models](#supported-models)
 - ⭐️[Installation](#installation)
-- ⭐️[Demo Code - HuggingFace](#demo-code---huggingface)
+- ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
