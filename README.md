@@ -23,6 +23,8 @@ The `MacBehaviour`(short for Machine Behaviour) R package offers a user-friendly
 
 **Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---hugging-face).**
 
+对于在中国内地的研究者，由于地区限制可能无法使用 OpenAI 和 Hugging Face，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。
+
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 
 Please pilot test your experiment before running it, as we are not responsible for any potential losses incurred.
@@ -31,8 +33,9 @@ Please pilot test your experiment before running it, as we are not responsible f
 
 ## News
 
+2024-Oct-16: Package Paper accepted by Behavior Research Methods.<br>
 2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face via Message API.<br>
-2024-July-2: Support models on Qianfan Baidu.
+2024-July-2: Support models on Qianfan Baidu.<br>
 
 ## Table of Contents
 - [Supported Model Platforms](#supported-model-platforms)
@@ -40,6 +43,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
+- ⭐️[Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
   - [2. Experiment Design](#2-experiment-design)
@@ -184,6 +188,60 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 ```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
+
+# Demo Code - Qianfan Baidu
+
+We have provided a demonstration script for models hosted on Baidu's Qianfan platform. You can begin by experimenting with free models such as `Yi-34B-Chat`, or choose from other models like the Meta-Llama and Mixtral families.
+
+For more details on obtaining API and secret keys, refer to [this guide](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/dlv4pct3s). To browse available models, check [this list](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat). Be aware that some models require payment for usage, as explained [here](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/hlrk4akp7#%E6%8C%89%E9%87%8F%E5%90%8E%E4%BB%98%E8%B4%B9).
+
+
+1. Install and load the package. You can skip this if it’s already installed.
+
+   ```r
+   install.packages("devtools")
+   devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+   library("MacBehaviour")
+   ```
+
+2. Communicate with one LLM: authenticate API access for the models you are working with.
+
+Replace `your_api_key_here` and `your_secret_key_here` with your personal API and secret keys. For more information on obtaining API and secret keys, refer to [this documentation](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/dlv4pct3s).
+
+For the model ID, you can use `Yi-34B-Chat` (currently free) or select from models like Meta-Llama and Mixtral families [here](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat).
+
+    ```r
+    setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "Yi-34B-Chat")
+    ```
+
+3. Load Data: organizes your experimental data from a data frame.
+
+You can find the demo data [here](https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx). For more details, please refer to the [tutorial](#tutorial).
+
+    ```r
+    df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+    ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+    ```
+
+4. Set Experimental Design.
+
+   ```r
+   Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+   ```
+
+5. Configure model parameters.
+
+   ```r
+   gptConfig <- preCheck(data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+   ```
+
+6. Run the Experiment.
+
+   ```r
+   runExperiment(gptConfig, savePath = "demo_results.csv")
+   ```
+
+
 
 ## Tutorial
 ### 1\. Communicate with Models
