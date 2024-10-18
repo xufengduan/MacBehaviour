@@ -208,6 +208,7 @@ setKey <- function(api_key,model,api_url = NULL,...){
   Sys.setenv(LOG_FILE = log_file_name)
   
   args <- list(...)
+  tryCatch({
   if (!is.null(api_key) && is.character(api_key)) {
     # AI/ML API
     if(nchar(api_key)==32){
@@ -331,6 +332,9 @@ setKey <- function(api_key,model,api_url = NULL,...){
   else {
     stop("Failed to the interact with the LLM.")
   }
+}, error = function(e) {
+  message("An error occurred:", e$message)
+})
 }
 
 #######################################setkey############################################

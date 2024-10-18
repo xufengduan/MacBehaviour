@@ -537,9 +537,13 @@ openai_completion <- function(
 
 wenxin_chat <- function(messages = list(list(role = "user", content = "Please repeat 'Setup successful'. DON'T say anything else.")), ...) {
   model = Sys.getenv("model")
+  if (tolower(model) == "yi-34b-chat") {
+    model <- "yi_34b_chat"
+  }
   api_key = Sys.getenv("key")
   secret_key = Sys.getenv("secret_key")
   url = Sys.getenv("url")
+  
   
   get_access_token <- function(api_key, secret_key) {
     url_access_token <- paste0("https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=", api_key, "&client_secret=", secret_key)
