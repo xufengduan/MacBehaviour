@@ -328,6 +328,7 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
             current_progress <- updateProgressBar(progress_bar, current_progress, total_iterations)
           }
           saveWorkbook(wb, savePath, overwrite = TRUE)
+          closeAllConnections()
         }
       }
     }
@@ -335,5 +336,4 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
   saveResults(wb, savePath, csvFlag)
   close(progress_bar)
   message("Done.")
-  closeAllConnections()
 }

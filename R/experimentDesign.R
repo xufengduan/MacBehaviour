@@ -49,6 +49,11 @@ experimentDesign <-function(data,session=1,randomItem=FALSE,randomEvent=FALSE){
     stop("error design in your exp data, plz check it.")
   }
 
+  # forbid NA in Item and Run
+  if (any(is.na(data$Item)) || any(is.na(data$Run))) {
+    stop("Item and Run cannot have NA values, please check your data.")
+  }
+  
   switch(Sys.getenv("exp"),
          "1" = message("Exp mode : One trial per run"),
          "2" = message("Exp mode : One trial per run"),
@@ -94,7 +99,6 @@ experimentDesign <-function(data,session=1,randomItem=FALSE,randomEvent=FALSE){
 
           randomized_events[subset_indices] <- sample(df$Event[subset_indices])
         }
-
 
         session_data$Event <- randomized_events
 
