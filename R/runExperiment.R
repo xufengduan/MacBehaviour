@@ -268,7 +268,7 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
       if (systemPrompt != "" && Completion_mode != TRUE&&Sys.getenv("llm") != "claude"&&Sys.getenv("llm") != "gemini"){
         messages <- addMessage(messages, system, systemPrompt)
       }
-      message("Beginning message: ",messages)
+      #message("Beginning message: ",messages)
       for (it in unique(data$Item)) {
         it_data <- r_data[r_data$Item == it, ]
         for (i in seq_len(nrow(it_data))) {
