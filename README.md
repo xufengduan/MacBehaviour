@@ -23,14 +23,15 @@ The `MacBehaviour`(short for Machine Behaviour) R package offers a user-friendly
 
 **Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---hugging-face).**
 
-对于在中国内地的研究者，由于地区限制可能无法使用 OpenAI 和 Hugging Face，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。
-
 For details and citation, please see the preprint: <a href="https://arxiv.org/abs/2405.07495"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. </a>
 
 Please pilot test your experiment before running it, as we are not responsible for any potential losses incurred.
 
 <div id="installing-and-loading-necessary-packages" class="section level3">
-
+  
+## Note
+对于在中国内地的研究者，由于地区限制可能无法使用 OpenAI 和 Hugging Face，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。<br>
+  
 ## News
 
 2024-Oct-16: Package paper accepted by Behavior Research Methods.<br>
