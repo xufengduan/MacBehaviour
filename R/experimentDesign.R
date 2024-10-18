@@ -73,11 +73,11 @@ experimentDesign <-function(data,session=1,randomItem=FALSE,randomEvent=FALSE){
           item_values <- unique(subset$Item)
           item_counts <- table(subset$Item)
           randomized_item_order <- sample(item_values)
-          reordered_counts <- item_counts[as.character(randomized_item_order)]
-          new_items <- rep(randomized_item_order, times = reordered_counts)
-          randomized_items[df$Run == run] <- new_items
+          # Reorder the subset based on the new item order
+          subset_new <- subset[order(match(subset$Item, randomized_item_order)), ]
+          # overlap the subset_new to the original data
+          session_data[df$Run == run, ] <- subset_new
         }
-        session_data$Item <- randomized_items
       }
       }
       if (randomEvent) {

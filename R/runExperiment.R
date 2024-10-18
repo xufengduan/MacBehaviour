@@ -260,8 +260,11 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
   
   for (s in unique(data$Session)) {
     s_data <- data[data$Session == s, ]
+    
     for (r in unique(data$Run)) {
       r_data <- s_data[s_data$Run == r, ]
+      trial = 0
+      
       # Beginning message
       #message(2222)
       messages <- Beginning_messages
@@ -269,8 +272,10 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
         messages <- addMessage(messages, system, systemPrompt)
       }
       #message("Beginning message: ",messages)
-      for (it in unique(data$Item)) {
+      for (it in unique(r_data$Item)) {
+        trial = trial+1
         it_data <- r_data[r_data$Item == it, ]
+        
         for (i in seq_len(nrow(it_data))) {
           
           if (Completion_mode != TRUE) {
@@ -279,7 +284,7 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
             messages <- it_data$Prompt[i]
           }
           t_data <- it_data[i, ]
-          message("run_LLMs_before_callmodel: ",messages)
+          #message("run_LLMs_before_callmodel: ",messages)
           result <- callModel(messages, model, args)
           # message(result)
           content_list <- result$content_list
@@ -299,7 +304,7 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
               t_data$Run,
               t_data$Item,
               t_data$Event,
-              i,
+              trial,
               t_data$Condition,
               t_data$Prompt,
               t_data$Response,

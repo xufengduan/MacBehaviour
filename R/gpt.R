@@ -279,11 +279,14 @@ gemini_chat <- function(
     stop("API key is not set.")
   }
   
-  if (exists("gptConfig")){
-  if (gptConfig$systemPrompt != "") {
-    system_instruction = list(parts = list(text = gptConfig$systemPrompt))
-  }}else{
-    system_instruction = ""
+  if (exists("gptConfig")) {
+    if (!is.null(gptConfig$systemPrompt) && gptConfig$systemPrompt != "") {
+      system_instruction <- list(parts = list(text = gptConfig$systemPrompt))
+    } else {
+      system_instruction <- ""
+    }
+  } else {
+    system_instruction <- ""
   }
 
   generationConfig = list(...)
