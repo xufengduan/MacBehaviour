@@ -33,7 +33,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 
 ## News
 
-2024-Oct-16: Package Paper accepted by Behavior Research Methods.<br>
+2024-Oct-16: Package paper accepted by Behavior Research Methods.<br>
 2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face via Message API.<br>
 2024-July-2: Support models on Qianfan Baidu.<br>
 
@@ -198,11 +198,11 @@ For more details on obtaining API and secret keys, refer to [this guide](https:/
 
 1. Install and load the package. You can skip this if it’s already installed.
 
-   ```r
-   install.packages("devtools")
-   devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
-   library("MacBehaviour")
-   ```
+```r
+install.packages("devtools")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+library("MacBehaviour")
+```
 
 2. Communicate with one LLM: authenticate API access for the models you are working with.
 
@@ -210,36 +210,36 @@ Replace `your_api_key_here` and `your_secret_key_here` with your personal API an
 
 For the model ID, you can use `Yi-34B-Chat` (currently free) or select from models like Meta-Llama and Mixtral families [here](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat).
 
-    ```r
-    setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "Yi-34B-Chat")
-    ```
+```r
+setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "Yi-34B-Chat")
+```
 
 3. Load Data: organizes your experimental data from a data frame.
 
 You can find the demo data [here](https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx). For more details, please refer to the [tutorial](#tutorial).
 
-    ```r
-    df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
-    ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
-    ```
+```r
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
 
 4. Set Experimental Design.
 
-   ```r
-   Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
-   ```
+```r
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
 
 5. Configure model parameters.
 
-   ```r
-   gptConfig <- preCheck(data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
-   ```
+```r
+gptConfig <- preCheck(data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+```
 
 6. Run the Experiment.
 
-   ```r
-   runExperiment(gptConfig, savePath = "demo_results.csv")
-   ```
+```r
+runExperiment(gptConfig, savePath = "demo_results.csv")
+```
 
 
 
