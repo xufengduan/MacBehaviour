@@ -149,7 +149,7 @@ openai_chat <- function(
       if(res$status_code == 429) {
         message(paste("Too many requests. Retrying in", wait_time, "seconds..."))
         Sys.sleep(wait_time)
-        wait_time <- min(wait_time * 3, max_wait_time)  # 增加等待时间，直到最大等待时间
+        wait_time <- min(wait_time + wait_time, max_wait_time)  
       } else {
         response_content <- paste("error with code:", res$status_code)
         message(response_content)
@@ -189,8 +189,9 @@ openai_chat <- function(
 #' @return A list of character strings containing the claude's responses.
 #' @noRd
 claude_chat <- function(
-  messages = list(),
+  messages = list(list(role = "user", content = "Please repeat 'Setup Successful'. DON'T say anything else.")),
   model = "claude-3-sonnet-20240229",
+  max_tokens = 1024,
   version = "2023-06-01",
   ...
 ){
@@ -200,17 +201,17 @@ claude_chat <- function(
   }
 
 
-
-
   headers <- c(
     'x-api-key' = Sys.getenv("key"),
     'anthropic-version' = version,
-    'Content-Type' = 'application/json'
+    'content-type' = 'application/json'
   )
 
   args <- list(
+    model = model,
     messages = messages,
-    model = model
+    max_tokens = max_tokens,
+    ...
   )
 
 
@@ -218,11 +219,12 @@ claude_chat <- function(
 
     res <- POST(
       url = Sys.getenv("url"),
-      body = modifyList(args, list(...)),
       add_headers(headers),
+      body = toJSON(args),
       encode = "json",
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
+    
     if(res$status_code != 200 && res$status_code != 201){
       response_content = paste("error with code:",res$status_code)
       message(response_content)
@@ -268,7 +270,7 @@ claude_chat <- function(
 #' @return A list of character strings containing the gemini's responses.
 #' @noRd
 gemini_chat <- function(
-  messages = list(list(parts = list(list(text = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse.")))),
+  messages = list(list(parts = list(text = "Please repeat 'Setup successful'. DON'T say anything else at the beginning of your reponse."))),
   model = Sys.getenv("model"),
   ...
 ){
@@ -276,15 +278,38 @@ gemini_chat <- function(
   if (is.null(Sys.getenv("key"))) {
     stop("API key is not set.")
   }
+  
+  if (exists("gptConfig")){
+  if (gptConfig$systemPrompt != "") {
+    system_instruction = list(parts = list(text = gptConfig$systemPrompt))
+  }}else{
+    system_instruction = ""
+  }
 
   generationConfig = list(...)
 
-  body <- list(
-    contents = messages,
-    model=model,
-    generationConfig = generationConfig
-  )
-
+  if (system_instruction == "") {
+    body <- list(
+      contents = messages,
+      model = model
+    )
+    
+    if (!is.null(generationConfig)) {
+      body$generationConfig <- generationConfig
+    }
+    
+  } else {
+    body <- list(
+      system_instruction = system_instruction,
+      contents = messages,
+      model = model
+    )
+    
+    if (!is.null(generationConfig)) {
+      body$generationConfig <- generationConfig
+    }
+  }
+# message(body)
 
   current_url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/",model,":generateContent?key=",Sys.getenv("key"))
 
@@ -311,9 +336,6 @@ gemini_chat <- function(
         #verbose(data_out = TRUE, data_in = FALSE, info = FALSE)
       )
       }
-    
-
-    
 
 
     if(res$status_code != 200 && res$status_code != 201){
@@ -341,9 +363,6 @@ gemini_chat <- function(
       parts <- content$parts
       content_text <- parts[[1]]$text
     }
-
-
-
 
   }, warning = function(war) {
     message(paste("Caught warning:", war$message))
@@ -535,13 +554,13 @@ wenxin_chat <- function(messages = list(list(role = "user", content = "Please re
   
   headers <- c('Content-Type' = 'application/json')
   
-  message("wenxin_chat: messages: ", messages)
+  #message("wenxin_chat: messages: ", messages)
   args <- list(
     messages = messages,
     ...
   )
   
-  message("wenxin_chat: args: ", args)
+  #message("wenxin_chat: args: ", args)
 
 
   tryCatch({
@@ -553,7 +572,7 @@ wenxin_chat <- function(messages = list(list(role = "user", content = "Please re
       encode = "json",
       config = config(ssl_verifypeer = 0L, timeout = 300)
     )
-    message(res)
+    #message(res)
     
     if (res$status_code != 200 && res$status_code != 201) {
       response_content = paste("Error with code:", res$status_code)

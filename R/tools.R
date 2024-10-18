@@ -1,3 +1,5 @@
+
+#######################################Tokenizer#############################################
 #' magicTokenizer
 #'
 #' @description
@@ -83,12 +85,6 @@
 
 
 
-
-
-
-
-
-
 #######################################addMessage############################################
 #' Internal Message Adder
 #'
@@ -137,7 +133,7 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
     return(messages)
   }
   else if ((Sys.getenv("llm")=="baidubce")){
-    message(content)
+    #message(content)
     messages <- append(messages,
                        list(
                        list(
@@ -161,16 +157,13 @@ addMessage <-function (messages,role="user",content="",imgDetail="low"){
     return(messages)
   }
   else if((Sys.getenv("llm")=="gemini")){
-    newMessage <- list(
+      newMessage <- list(
       role = role,
       parts = list(
-        list(
-          text = content
-        )
+        text = unlist(content)
       )
     )
     messages <- append(messages, list(newMessage))
-    return(messages)
 
     return(messages)
   }
@@ -303,9 +296,23 @@ setKey <- function(api_key,model,api_url = NULL,...){
     if (grepl("/chat/", Sys.getenv("url"))|grepl("/message", Sys.getenv("url"))) {
       message("chat completion mode")
       # message("setKey: ",chat_request)
-      message(c(do.call(chat_request, modifyList(list(
-        model = model
-      ), args))$content_list,"  Model - ",model))
+      # message(c(do.call(chat_request, modifyList(list(
+      #   model = model
+      # ), args))$content_list,"  Model - ",model))
+      result <- tryCatch(
+        c(do.call(chat_request, modifyList(list(
+          model = model
+        ), args))$content_list),
+        error = function(e) {
+          return(e)
+        }
+      )
+      
+      if (length(result) == 0) {
+        stop("Error: The content_list is empty. Please check the input parameters or the chat_request function.")
+      } else {
+        message(result, "  Model - ", model)
+      }
       
     } else {
       tryCatch({
@@ -319,19 +326,7 @@ setKey <- function(api_key,model,api_url = NULL,...){
       })
     }
 
-    # switch(tolower(Sys.getenv("llm")),
-    #        #"openai" = chatgpt_test(api_key,model),
-    #        "openai" = message(c(openai_chat()$content_list,"  Model:",model)),
-    #        "baidubce" = c(wenxin_chat()$content_list,model),
-    #        "llama-3" = llama3_test(api_key,model),
-    #        "llama-2" = llama2_test(api_key,model),
-    #        "claude"= claude_test(api_key,model),
-    #        "gemini"= gemini_test(api_key,model),
-    #        "baichuan"= baichuan_test(api_key,model),
-    #        "custom"= custom_test(model),
-    #        "aimlapi"=aimlapi_test(api_key,model),
-    #        stop("Failed to the interact with the LLM.")
-    # )
+
   }
   else {
     stop("Failed to the interact with the LLM.")
@@ -468,7 +463,7 @@ custom_test <- function(model){
     ),max_tokens = 10,temperature = 0.1,model=Sys.getenv("model"))$content_list)
 
   } else {
-    # 不包含chat
+    # not include chat
     message(openai_completion(list(
       list(
         role = "user",
