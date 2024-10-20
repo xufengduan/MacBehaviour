@@ -278,7 +278,7 @@ gemini_chat <- function(
   if (is.null(Sys.getenv("key"))) {
     stop("API key is not set.")
   }
-  
+  gptConfig <- tryCatch(get("gptConfig", envir = .GlobalEnv), error = function(e) NULL)
   if (exists("gptConfig")) {
     if (!is.null(gptConfig$systemPrompt) && gptConfig$systemPrompt != "") {
       system_instruction <- list(parts = list(text = gptConfig$systemPrompt))
