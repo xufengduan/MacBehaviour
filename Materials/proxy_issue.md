@@ -1,45 +1,50 @@
 # Proxy issue
+## 在R中设置代理
+对于在中国内地的研究者，如果使用代理，请在脚本的第一行 添加
+```R
+Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
+```\
+其中http://127.0.0.1是代理服务器的IP地址，XXXX为代理端口号，需要根据代理的不同自行查找。
+目前已知的代理IP地址：
+- shadowsocket: socks5://127.0.0.1
+- clash: http://127.0.0.1
 
 ## 如何获得端口号
+### Windows
+步骤 1：打开代理程序
+	1.	运行你正在使用的代理客户端。
+	2.	确保成功连接到代理服务器，并使其保持激活状态。
 
-To use **MacBehaviour** with models like OpenAI GPT, Hugging Face models, or other supported LLMs (Large Language Models), you will need to provide an API key. The `api_key` argument is **required** for authenticated access to the models.
+步骤 2：进入网络和Internet设置
+	1.	打开 设置（按 Win + I 键）。
+	2.	在左侧菜单中选择 网络和 Internet（见图中标记为1）。
+	3.	在“网络和 Internet”页面中，点击 代理（标记为2）。
 
-If you are using a self-hosted model, please set the `api_key` argument to `"NA"`. However, for all other platforms, an API key from the respective provider is necessary.
+步骤 3：编辑代理设置
+	1.	在“代理”页面中，找到 手动设置代理 区域。
+	2.	点击 编辑 按钮（标记为3），会弹出代理服务器的设置窗口。
 
-### Important:
-- **API keys** are personal and tied to your account with OpenAI, Hugging Face, or other companies.
-- **Costs**: Model inference requires significant computational resources. **Users must pay** for access to these resources.
+步骤 4：获取代理端口号
+	1.	在弹出的窗口中，你会看到代理服务器的 IP 地址 和 端口号。
+	2.	端口号显示在 端口 旁边的输入框中（标记为4），在此示例中端口号是 7890。
+	3.	确保代理服务器开关处于“开”的状态，并且确认代理信息无误后，点击 保存 按钮。
 
-## How to Obtain a Hugging Face API Key
+![image](https://github.com/user-attachments/assets/632261d7-9e59-4910-9a3e-be4064e5b8b4)
+<br>
 
-For models hosted on **Hugging Face** (e.g., Llama 3.1), follow these steps:
+### MacOS
+步骤 1.	打开“终端”
+	1. 按 Command + 空格 调出 Spotlight 搜索，输入“终端”并打开。
 
-1. Go to the [Hugging Face platform](https://huggingface.co/).
-2. **Sign up** for an account if you don't have one already. You may receive a verification email to complete your registration.
-3. After logging in, click on your profile picture in the top right corner and go to your **settings**.
-4. In the settings, find the **access token** section and **create a new token**.
-5. Select `write` for the `Token type`, enter a name (e.g., testing), and click **create token**.
-6. Copy this token and use it as your API key in the `api_key` argument.
+步骤	2.	使用 lsof 命令查看端口号
+	1. 在终端中输入以下命令以列出所有当前使用的端口号：
+  ```
+  lsof -i -P
+  ```
+  2. NAME列包括了所有的可能的代理地址和代理端口号，在*.后则是可能得本地代理端口。
 
-### Costs:
-- Hugging Face provides both **free** (e.g.,google/gemma-2-2b-it)and **paid** (e.g., meta-llama/Meta-Llama-3.1-8B-Instruct) tiers for model inference, depending on the computational requirements.
-- Pricing details for Hugging Face model inference are available [here](https://huggingface.co/blog/inference-pro).
-- You can <a href = "https://huggingface.co/settings/billing/subscription">subscribe PRO <a> for access to more advanced models
+<img width="631" alt="image" src="https://github.com/user-attachments/assets/a572a609-cf36-464b-a3b8-f54b9d3c1149">
 
-## How to Obtain an OpenAI API Key
-
-To use models from **OpenAI** (e.g., GPT-4), follow these steps to get your API key:
-
-1. Visit the [OpenAI platform](https://platform.openai.com/).
-2. **Sign up** for an account if you don't have one.
-3. After logging in, go to your **account settings**.
-4. Set up your <a href ="https://platform.openai.com/settings/organization/billing/overview">payment</a> before using the API.
-5. In the **Dashboard**, click on **API keys**, then select the option to **create a new secret key**.
-6. Copy this key and use it as the `api_key` argument when calling the `setKey()` function.
-
-### Costs:
-- **OpenAI API access is not free**. You will need to pay for model inference, and pricing details can be found [here](https://openai.com/pricing).
-- Ensure you are aware of the potential costs before using the API for extensive experiments.
 
 
 
