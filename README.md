@@ -29,14 +29,6 @@ Please pilot test your experiment before running it, as we are not responsible f
 
 <div id="installing-and-loading-necessary-packages" class="section level3">
   
-## Note
-对于在中国内地的研究者，如果使用代理，请在脚本中添加
-```R
-Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
-```
-其中XXXX为代理端口号，了解 <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">如何获得端口号</a>。<br>
-
-由于地区限制可能无法使用 OpenAI 和 Hugging Face的，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。但需要提前注册<br>
   
 ## News
 
@@ -84,6 +76,14 @@ If you prefer using cloud-based models, this package currently supports the foll
 | 50+  other self-hosted LLMs  (e.g.,  Vicuna, FastChat-T5) | FastChat (Zheng  et al., 2023)    |
 | 200+ other cloud-hosted LLMs	                            | AI/ML API (AI/ML API, 2024)       |
 
+## Note
+对于在中国内地的研究者，如果使用代理，请在脚本中添加
+```R
+Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
+```
+其中XXXX为代理端口号，了解 <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">如何获得端口号</a>。<br>
+
+由于地区限制可能无法使用 OpenAI 和 Hugging Face的，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。但需要提前注册<br>
 
 ## Installation
 
