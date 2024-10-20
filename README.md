@@ -31,7 +31,7 @@ Please pilot test your experiment before running it, as we are not responsible f
   
 ## Note
 对于在中国内地的研究者，如果使用代理，请在脚本中添加
-'''
+'''R
 Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
 '''
 其中XXXX为代理端口号，了解 <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">如何获得端口号</a>。<br>
