@@ -589,7 +589,10 @@ wenxin_chat <- function(messages = list(list(role = "user", content = "Please re
     }
     
     response_text <- content(res, 'text', encoding = "UTF-8")
+    
+    
     res_json <- fromJSON(response_text)
+    
     # message(res_json)
     result <- list(content_list = res_json$result, raw_response = response_text)
   }, warning = function(war) {

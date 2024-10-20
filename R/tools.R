@@ -303,16 +303,17 @@ setKey <- function(api_key,model,api_url = NULL,...){
       result <- tryCatch(
         c(do.call(chat_request, modifyList(list(
           model = model
-        ), args))$content_list),
+        ), args))),
         error = function(e) {
           return(e)
         }
       )
       
-      if (length(result) == 0) {
-        stop("Error: The content_list is empty. Please check the input parameters or the chat_request function.")
+      if (length(result$content_list) == 0) {
+        message(result)
+        stop("Error: Failed to interact with the LLM.")
       } else {
-        message(result, "  Model - ", model)
+        message(result$content_list, "  Model - ", model)
       }
       
     } else {

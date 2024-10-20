@@ -50,7 +50,7 @@ runExperiment <- function (gptConfig, savePath = "./output.xlsx") {
 #' @import openxlsx
 #' @param gptConfig A list containing the configuration for the GPT model, including the system prompt,
 #' model specifications, token settings, and experiment mode.
-#' @param savePath The file path where the experiment results will be saved in Excel format.
+#' @param savePath The file path where the experiment results will be saved in Excel/CSV format.
 #' @param log A logical value indicating whether to log the experiment results. Defaults to FALSE.
 #'
 #' @return This function does not return a value but executes the experiment scenarios and
@@ -117,7 +117,8 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
       "llama-2" = list(chat = "llama_chat", completion = "llama_chat"),
       baidubce = list(chat = "wenxin_chat", completion = "wenxin_chat"),
       claude = list(chat = "claude_chat", completion = "claude_chat"),
-      gemini = list(chat = "gemini_chat", completion = "gemini_chat")
+      gemini = list(chat = "gemini_chat", completion = "gemini_chat"),
+      custom = list(chat = "openai_chat", completion = "openai_completion")
     )
     chat_request <- model_request[[Sys.getenv("llm")]]$chat
     completion_request <- model_request[[Sys.getenv("llm")]]$completion
@@ -135,8 +136,10 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
             prompt = messages, model = model
           ), args))
         }
-        # message(result_list$content_list)
+        #message(result_list$content_list)
         # message(result_list$raw_response)
+        
+        
         list(
           content_list = result_list$content_list,
           raw_response = result_list$raw_response,
@@ -286,6 +289,10 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
           t_data <- it_data[i, ]
           #message("run_LLMs_before_callmodel: ",messages)
           result <- callModel(messages, model, args)
+          if (is.null(result$content_list)|| length(result$content_list) == 0) {
+            stop("No result returned from model. Please check setKey function or the model parameter setting in preCheck function.")
+          }
+          
           # message(result)
           content_list <- result$content_list
           raw_temp <- result$raw_response
