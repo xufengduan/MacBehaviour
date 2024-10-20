@@ -218,6 +218,11 @@ run_LLMs <- function(gptConfig, savePath, log = FALSE) {
       system = "system",
       assistant = "assistant"
     ),
+    custom = list(
+      user = "user",
+      system = "system",
+      assistant = "assistant"
+    ),
     claude = list(
       user = "user",
       system = "system",
