@@ -216,12 +216,12 @@ library("MacBehaviour")
 Replace `your_api_key_here` and `your_secret_key_here` with your personal API and secret keys. For more information on obtaining API and secret keys, refer to [this documentation](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/dlv4pct3s).
 
 For the model ID, you can use `yi_34b_chat` (currently free) or select from models like Meta-Llama and Mixtral families [here](https://console.bce.baidu.com/qianfan/ais/console/onlineService).
-
-![image](https://github.com/user-attachments/assets/c818c651-b905-4a25-a209-0a4603f5b09e)
-The string after "chat/" is the model ID.
+<br>
+The string following "chat/" (underlined in the picture) is the model ID.
+<img width="1163" alt="Screenshot 2024-10-21 at 12 09 25 AM" src="https://github.com/user-attachments/assets/f6a97c6b-d1f9-4fc1-8cc8-be4d37fefbcc">
 
 ```r
-setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "Yi-34B-Chat")
+setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "yi_34b_chat")
 ```
 
 3. Load Data: organizes your experimental data from a data frame.
