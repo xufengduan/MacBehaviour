@@ -215,7 +215,10 @@ library("MacBehaviour")
 
 Replace `your_api_key_here` and `your_secret_key_here` with your personal API and secret keys. For more information on obtaining API and secret keys, refer to [this documentation](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/dlv4pct3s).
 
-For the model ID, you can use `Yi-34B-Chat` (currently free) or select from models like Meta-Llama and Mixtral families [here](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat).
+For the model ID, you can use `yi_34b_chat` (currently free) or select from models like Meta-Llama and Mixtral families [here](https://console.bce.baidu.com/qianfan/ais/console/onlineService).
+
+![image](https://github.com/user-attachments/assets/c818c651-b905-4a25-a209-0a4603f5b09e)
+The string after "chat/" is the model ID.
 
 ```r
 setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "Yi-34B-Chat")
