@@ -196,7 +196,7 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
 
-# Demo Code - Qianfan Baidu
+## Demo Code - Qianfan Baidu
 
 We have provided a demonstration script for models hosted on Baidu's Qianfan platform. You can begin by experimenting with free models such as `Yi-34B-Chat`, or choose from other models like the Meta-Llama and Mixtral families.
 
