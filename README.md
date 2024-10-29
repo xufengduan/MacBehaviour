@@ -198,7 +198,7 @@ runExperiment(gptConfig, savePath = "demo_results.csv")
 
 ## Demo Code - Qianfan Baidu
 
-We have provided a demonstration script for models hosted on Baidu's Qianfan platform. You can begin by experimenting with free models such as `Yi-34B-Chat`, or choose from other models like the Meta-Llama and Mixtral families.
+This is a demo code for models hosted on Baidu's Qianfan platform. You can begin by experimenting with free models such as `yi_34b_chat`/`ernie_speed`, or choose from other models like the Meta-Llama and Mixtral families.
 
 For more details on obtaining API and secret keys, refer to [this guide](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/dlv4pct3s). To browse available models, check [this list](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat). Be aware that some models require payment for usage, as explained [here](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/hlrk4akp7#%E6%8C%89%E9%87%8F%E5%90%8E%E4%BB%98%E8%B4%B9).
 
@@ -215,7 +215,7 @@ library("MacBehaviour")
 
 Replace `your_api_key_here` and `your_secret_key_here` with your personal API and secret keys. For more information on obtaining API and secret keys, refer to [this documentation](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/dlv4pct3s).
 
-For the model ID, you can use `yi_34b_chat` (currently free) or select from models like Meta-Llama and Mixtral families [here](https://console.bce.baidu.com/qianfan/ais/console/onlineService).
+For the model ID, you can use `yi_34b_chat` (currently free. You can check the API price of models [here](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/hlrk4akp7#%E6%8C%89%E9%87%8F%E5%90%8E%E4%BB%98%E8%B4%B9) ) or select from models like Meta-Llama and Mixtral families [here](https://console.bce.baidu.com/qianfan/ais/console/onlineService).
 <br>
 The string following "chat/" (underlined in the picture) is the model ID.
 <img width="1163" alt="Screenshot 2024-10-21 at 12 09 25 AM" src="https://github.com/user-attachments/assets/f6a97c6b-d1f9-4fc1-8cc8-be4d37fefbcc">
