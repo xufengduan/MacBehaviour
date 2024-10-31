@@ -39,6 +39,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 ## Table of Contents
 - [Supported Model Platforms](#supported-model-platforms)
 - [Supported Models](#supported-models)
+- [Note](#note)
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
@@ -83,7 +84,18 @@ Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
 ```
 其中XXXX为代理端口号，了解 <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/proxy_issue.md">如何获得端口号</a>。<br>
 
-由于地区限制可能无法使用 OpenAI 和 Hugging Face的，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。但需要提前一天注册，才能使用免费模型。<br>
+由于地区限制可能无法使用 OpenAI 和 Hugging Face的，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。但需要提前一天注册，才能使用免费模型。<br><br>
+
+## Frequently asked questions
+`Q1: Why does Error 422 occur?`  <br>
+A: The model has context limits. <br>For example, Llama-3.2-Instruct is limited to 4096 tokens, so the prompt length (including conversation history across multiple trials per run design) must stay within that limit. <br>You can consider to spilt the items into several lists to avoid this error or simply use one trial per run desgin for now.<br> 
+<br>
+`Q2: Why are there duplicate trial numbers within a session?` <br>
+A: Please check if the item_id is duplicated. <br>
+<br>
+ 
+
+
 
 ## Installation
 
