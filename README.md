@@ -87,14 +87,26 @@ Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
 由于地区限制可能无法使用 OpenAI 和 Hugging Face的，可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。但需要提前一天注册，才能使用免费模型。<br><br>
 
 ## Frequently Asked Questions
-`Q1: Why does Error 422 occur?`  <br>
-A: The model has context limits. <br>For example, Llama-3.2-Instruct is limited to 4096 tokens, so the prompt length (including conversation history across multiple trials per run design) must stay within that limit. <br>You can consider to spilt the items into several lists to avoid this error or simply use one trial per run desgin for now.<br> 
-<br>
+`Q1: How to convert log-probabilities to probabilities in both R and Excel`<br>
+To convert log probability (logp) to regular probability (p) in both R and Excel, you can use the exponential function. <br>
+In R:
+```R
+p <- exp(logp)
+```
+In Excel:
+```Excel
+# Assuming your log probability is in cell A1, you can use the EXP function to convert it:
+=EXP(A1)
+```
+This will give you the probability corresponding to the log probability value.<br>
+
 `Q2: Why are there duplicate trial numbers within a session?` <br>
 A: Please check if the item_id is duplicated. <br>
 <br>
- 
 
+`Q3: Why does Error 422 occur?`  <br>
+A: The model has context limits. <br>For example, Llama-3.2-Instruct is limited to 4096 tokens, so the prompt length (including conversation history across multiple trials per run design) must stay within that limit. <br>You can consider to spilt the items into several lists to avoid this error or simply use one trial per run desgin for now.<br> 
+<br>
 
 
 ## Installation
