@@ -151,19 +151,19 @@ install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 library("MacBehaviour")
 ```
-2. Deploy a model on HuggingFace. Click the <a href="https://huggingface.co/"> link </a> here and sign up for a HuggingFace account.
+2. Deploy a model on HuggingFace. Click the <a href="https://huggingface.co/">link</a> here and register/login your HuggingFace account.
 ![image01](https://github.com/user-attachments/assets/477f6c10-4f2d-47d0-bbae-c91f4d04c9e7)
 <br><br>
 Note that you will receive an email in which you will need to click on the confirmation link to verify your account.
 ![image02](https://github.com/user-attachments/assets/03b37a2d-3a73-4f04-8d6f-65c5a78423e6)
 <br><br>
-3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct"> meta-llama/Llama-3.2-3B-Instruct </a> (just for example). You can choose other LLMs as you wish.
+3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other LLMs as you wish.
 ![image03](https://github.com/user-attachments/assets/c244a312-4959-473c-a848-ce3aa35c5318)
 <br><br>
-4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
+4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Then select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
 ![image04](https://github.com/user-attachments/assets/cceceed4-5a6c-4d1a-9ca0-fea96430079d)
 <br><br>
-5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize, and once it is ready you can use it normally.
+5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
 ![image05](https://github.com/user-attachments/assets/9368e3a7-4d0c-4fc0-abfd-a0b9af712f01)
 <br><br>
 6. Now the model works fine, and you may notice that the Endpoint URL has been updated, which we'll use later.
@@ -179,7 +179,7 @@ In this demo, we'll use `meta-llama/Llama-3.2-3B-Instruct` as the model ID. Or y
 <br><br>
 As we just mentioned, `YOUR_ENDPOINT_URL` refers to the Endpoint_URL generated when the model is run. Since the interaction property of the model is ‘chat_completion’, we should add `/v1/chat/completions` to the end of the URL.
 <br><br>
-If you have questions about the format `/v1/chat/completions` at the end, check out the MacBehaviour source code <a href="https://github.com/xufengduan/MacBehaviour/blob/c30b1e4388ed19a1dce611bf71bc703dc4bb0c2e/R/tools.R#L206"> here </a>, as this is the default suffix set by the setKey function for the chat_completion model.
+If you have questions about the format `/v1/chat/completions` at the end, check out the MacBehaviour source code <a href="https://github.com/xufengduan/MacBehaviour/blob/c30b1e4388ed19a1dce611bf71bc703dc4bb0c2e/R/tools.R#L206">here</a>, as this is the default suffix set by the setKey function for the chat_completion model.
 
 ```R
 setKey(api_key = "YOUR_API_KEY", model = "meta-llama/Llama-3.2-3B-Instruct", api_url = "YOUR_ENDPOINT_URL")
@@ -206,7 +206,7 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
 ![image08](https://github.com/user-attachments/assets/e3844157-5d02-48f8-9c12-7686e543df4a)
-12. View the results. You can write the output (csv file) to results and view it in R studio.
+12. View the results. You can write the output (csv file) to `results` and view it in R studio.
 ```R
 results <- read.csv("demo_results.csv")
 View(results)
