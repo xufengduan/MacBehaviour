@@ -43,6 +43,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 - [Frequently Asked Questions](#Frequently-Asked-Questions)
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
+- ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)
 - [Tutorial](#tutorial)
@@ -180,6 +181,78 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 ```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
+## Demo Code - Hugging Face Endpoint
+
+Here we'll deploy inference endpoints of another large language model to demonstrate the details of our experiment.
+
+1. Install and load the package. You can skip it if you have already done it.
+```R
+install.packages("devtools")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+library("MacBehaviour")
+```
+2. Deploy a model on HuggingFace. Click the <a href="https://huggingface.co/">link</a> here and register/login your HuggingFace account.
+<img width="330" alt="image" src="https://github.com/user-attachments/assets/477f6c10-4f2d-47d0-bbae-c91f4d04c9e7">
+<br><br>
+Note that you will receive an email in which you will need to click on the confirmation link to verify your account.
+<img width="450" alt="image" src="https://github.com/user-attachments/assets/03b37a2d-3a73-4f04-8d6f-65c5a78423e6">
+<br><br>
+3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other LLMs as you wish.
+![image03](https://github.com/user-attachments/assets/c244a312-4959-473c-a848-ce3aa35c5318)
+<br><br>
+4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Then select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
+![image04](https://github.com/user-attachments/assets/cceceed4-5a6c-4d1a-9ca0-fea96430079d)
+<br><br>
+5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
+![image05](https://github.com/user-attachments/assets/9368e3a7-4d0c-4fc0-abfd-a0b9af712f01)
+<br><br>
+6. Now the model works fine, and you may notice that the Endpoint URL has been updated, which we'll use later.
+![image06](https://github.com/user-attachments/assets/66ff886f-416e-4cb9-9c1a-ec6573c8eeb4)
+<br><br>
+![image07](https://github.com/user-attachments/assets/92f4c400-b5e0-4939-b439-c03330631bdc)
+<br><br>
+7. Communicate with one LLM.
+<br><br>
+Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
+<br><br>
+In this demo, we'll use `meta-llama/Llama-3.2-3B-Instruct` as the model ID. Or you can try selecting a free model one by one from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families).
+<br><br>
+As we just mentioned, `YOUR_ENDPOINT_URL` refers to the Endpoint_URL generated when the model is run. Since the interaction property of the model is ‘chat_completion’, we should add `/v1/chat/completions` to the end of the URL.
+<br><br>
+If you have questions about the format `/v1/chat/completions` at the end, check out the MacBehaviour source code <a href="https://github.com/xufengduan/MacBehaviour/blob/c30b1e4388ed19a1dce611bf71bc703dc4bb0c2e/R/tools.R#L206">here</a>, as this is the default suffix set by the setKey function for the chat_completion model.
+
+```R
+setKey(api_key = "YOUR_API_KEY", model = "meta-llama/Llama-3.2-3B-Instruct", api_url = "YOUR_ENDPOINT_URL")
+```
+
+8. Load Data: organizes your experimental data from a data frame.
+<br><br>
+You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
+
+```R
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
+9. Set Experimental Design.
+```R
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
+10. Configures model parameters. You can find more parameters <a href = "https://huggingface.co/docs/huggingface_hub/main/en/package_reference/inference_client#huggingface_hub.InferenceClient.chat_completion">here</a>.
+```R
+gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+```
+11. Run the Experiment.
+```R
+runExperiment(gptConfig, savePath = "demo_results.csv")
+```
+![image08](https://github.com/user-attachments/assets/e3844157-5d02-48f8-9c12-7686e543df4a)
+12. View the results. You can write the output (csv file) to `results` and view it in R studio.
+```R
+results <- read.csv("demo_results.csv")
+View(results)
+```
+![image09](https://github.com/user-attachments/assets/97410c47-85b6-4490-900b-4c0d26028a61)
+
 ## Demo Code - OpenAI
 
 This script provides an example of how to use OpenAI models with the MacBehaviour package.
