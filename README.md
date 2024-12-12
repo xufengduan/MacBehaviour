@@ -197,29 +197,26 @@ library("MacBehaviour")
 ```
 
 2. Create a Hugging Face account. Click the <a href="https://huggingface.co/">link</a> here and register/login your HuggingFace account.
-![image01](https://github.com/user-attachments/assets/8be4cb9d-0bb7-40f4-b72d-8bc3a4926830)
 <br><br>
 Note that you will receive an email in which you will need to click on the confirmation link to verify your account.
 ![image02](https://github.com/user-attachments/assets/2735ae61-c6ef-41b9-ac91-f7c8d87e4ac2)
-<br><be>
+<br><br>
 
 3. Select a model. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other models from <a href="https://huggingface.co/models?other=conversational,endpoints_compatible&sort=trending">this list of HuggingFace models</a>
 ![image03](https://github.com/user-attachments/assets/36dc85d7-8766-43fc-97af-dc921d10cdc4)
-<br><be>
+<br><br>
 
 4. Create an Endpoint. Add a credit card to access HuggingFace's model deployment service, then configure options based on your needs. The estimated cost is displayed at the bottom right corner—if you select ‘Never automatically scale to zero,’ pause the model when not in use to avoid charges.
 ![image04](https://github.com/user-attachments/assets/09060933-2a13-4172-bb0d-5297458ba756)
-<br><be>
+<br><br>
 
 5. Initialisation. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
 ![image05](https://github.com/user-attachments/assets/74aae84a-e213-4624-98ba-16fb80323811)
-<br><be>
+<br><br>
 
 6. Once initialized, confirm that the Endpoint URL has been updated—it will be needed later.
 ![image06](https://github.com/user-attachments/assets/dd3a4162-af93-4944-84a7-8e4e7cef94ba)
 <br><br>
-![image07](https://github.com/user-attachments/assets/653fade9-6370-4fda-a875-6828aa2b78e0)
-<br><be>
 
 7. Communicate with one LLM.
 <br><br>
@@ -227,7 +224,7 @@ Replace `YOUR_API_KEY` to you personal API key. For more information on obtainin
 <br><br>
 In this demo, we'll use `meta-llama/Llama-3.2-3B-Instruct` as the model ID. You can choose other models from <a href="https://huggingface.co/models?other=conversational,endpoints_compatible&sort=trending">this list of HuggingFace models</a>
 <br><br>
-As mentioned earlier, `YOUR_ENDPOINT_URL` is the Endpoint_URL generated when running the model. Since the model's interaction property is 'chat_completion,' append `/v1/chat/completions` to the URL.
+As mentioned earlier, `YOUR_ENDPOINT_URL` is the Endpoint_URL generated when running the model. Since the model's interaction property is 'chat_completion,' append `/v1/chat/completions` to the URL (e.g., https://kwz7oogikbhfu54x.us-east-1.aws.endpoints.huggingface.cloud/v1/chat/completions).
 <br><br>
 
 ```R
