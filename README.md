@@ -198,18 +198,18 @@ Note that you will receive an email in which you will need to click on the confi
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/03b37a2d-3a73-4f04-8d6f-65c5a78423e6">
 <br><br>
 3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other LLMs as you wish.
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/c244a312-4959-473c-a848-ce3aa35c5318">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/c244a312-4959-473c-a848-ce3aa35c5318">
 <br><br>
 4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Then select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/cceceed4-5a6c-4d1a-9ca0-fea96430079d">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/cceceed4-5a6c-4d1a-9ca0-fea96430079d">
 <br><br>
 5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/9368e3a7-4d0c-4fc0-abfd-a0b9af712f01">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/9368e3a7-4d0c-4fc0-abfd-a0b9af712f01">
 <br><br>
 6. Now the model works fine, and you may notice that the Endpoint URL has been updated, which we'll use later.
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/66ff886f-416e-4cb9-9c1a-ec6573c8eeb4">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/66ff886f-416e-4cb9-9c1a-ec6573c8eeb4">
 <br><be>
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/92f4c400-b5e0-4939-b439-c03330631bdc">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/92f4c400-b5e0-4939-b439-c03330631bdc">
 <br><br>
 7. Communicate with one LLM.
 <br><br>
@@ -245,13 +245,13 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 ```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/e3844157-5d02-48f8-9c12-7686e543df4a">
-12. View the results. You can write the output (csv file) to `results` and view it in R studio.
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/e3844157-5d02-48f8-9c12-7686e543df4a">
+12. View the results. You can write the output (csv file) to `results` and view it in R studio.<br>
 ```R
 results <- read.csv("demo_results.csv")
 View(results)
 ```
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/97410c47-85b6-4490-900b-4c0d26028a61">
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/97410c47-85b6-4490-900b-4c0d26028a61">
 
 ## Demo Code - OpenAI
 
