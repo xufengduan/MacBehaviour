@@ -191,26 +191,32 @@ install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 library("MacBehaviour")
 ```
+
 2. Deploy a model on HuggingFace. Click the <a href="https://huggingface.co/">link</a> here and register/login your HuggingFace account.
-<img width="330" alt="image" src="https://github.com/user-attachments/assets/477f6c10-4f2d-47d0-bbae-c91f4d04c9e7">
+![image01](https://github.com/user-attachments/assets/8be4cb9d-0bb7-40f4-b72d-8bc3a4926830)
 <br><br>
 Note that you will receive an email in which you will need to click on the confirmation link to verify your account.
-<img width="450" alt="image" src="https://github.com/user-attachments/assets/03b37a2d-3a73-4f04-8d6f-65c5a78423e6">
-<br><br>
-3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other LLMs as you wish.
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/c244a312-4959-473c-a848-ce3aa35c5318">
-<br><br>
-4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Then select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/cceceed4-5a6c-4d1a-9ca0-fea96430079d">
-<br><br>
-5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/9368e3a7-4d0c-4fc0-abfd-a0b9af712f01">
-<br><br>
-6. Now the model works fine, and you may notice that the Endpoint URL has been updated, which we'll use later.
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/66ff886f-416e-4cb9-9c1a-ec6573c8eeb4">
+![image02](https://github.com/user-attachments/assets/2735ae61-c6ef-41b9-ac91-f7c8d87e4ac2)
 <br><be>
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/92f4c400-b5e0-4939-b439-c03330631bdc">
+
+3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other LLMs as you wish.
+![image03](https://github.com/user-attachments/assets/36dc85d7-8766-43fc-97af-dc921d10cdc4)
+<br><be>
+
+4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Then select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
+![image04](https://github.com/user-attachments/assets/09060933-2a13-4172-bb0d-5297458ba756)
+<br><be>
+
+5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
+![image05](https://github.com/user-attachments/assets/74aae84a-e213-4624-98ba-16fb80323811)
+<br><be>
+
+6. Now the model works fine, and you may notice that the Endpoint URL has been updated, which we'll use later.
+![image06](https://github.com/user-attachments/assets/dd3a4162-af93-4944-84a7-8e4e7cef94ba)
 <br><br>
+![image07](https://github.com/user-attachments/assets/653fade9-6370-4fda-a875-6828aa2b78e0)
+<br><be>
+
 7. Communicate with one LLM.
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
@@ -233,25 +239,30 @@ You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour
 df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
 ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
 ```
+
 9. Set Experimental Design.
 ```R
 Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
 ```
+
 10. Configures model parameters. You can find more parameters <a href = "https://huggingface.co/docs/huggingface_hub/main/en/package_reference/inference_client#huggingface_hub.InferenceClient.chat_completion">here</a>.
 ```R
 gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
 ```
+
 11. Run the Experiment.
 ```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/e3844157-5d02-48f8-9c12-7686e543df4a">
+![image08](https://github.com/user-attachments/assets/cf85f5d7-e4f7-4694-8429-4a6d038dd605)
+
 12. View the results. You can write the output (csv file) to `results` and view it in R studio.<br>
 ```R
 results <- read.csv("demo_results.csv")
 View(results)
 ```
-<img width="837" alt="image" src="https://github.com/user-attachments/assets/97410c47-85b6-4490-900b-4c0d26028a61">
+![image09](https://github.com/user-attachments/assets/37734b85-65d8-4a44-912a-6e0777ba19b0)
+
 
 ## Demo Code - OpenAI
 
