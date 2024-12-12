@@ -183,7 +183,11 @@ runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
 ## Demo Code - Hugging Face Endpoint
 
-Here we'll deploy inference endpoints of another large language model to demonstrate the details of our experiment.
+If you want to deploy models not currently supported by the Hugging Face Inference API, you can use the Endpoint service.
+
+This service supports over 100 Hugging Face models, allowing deployment on cloud GPUs and experimentation via the endpoint API.
+
+Here, we’ll walk through the setup process.
 
 1. Install and load the package. You can skip it if you have already done it.
 ```R
@@ -192,26 +196,26 @@ devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 library("MacBehaviour")
 ```
 
-2. Deploy a model on HuggingFace. Click the <a href="https://huggingface.co/">link</a> here and register/login your HuggingFace account.
+2. Create a Hugging Face account. Click the <a href="https://huggingface.co/">link</a> here and register/login your HuggingFace account.
 ![image01](https://github.com/user-attachments/assets/8be4cb9d-0bb7-40f4-b72d-8bc3a4926830)
 <br><br>
 Note that you will receive an email in which you will need to click on the confirmation link to verify your account.
 ![image02](https://github.com/user-attachments/assets/2735ae61-c6ef-41b9-ac91-f7c8d87e4ac2)
 <br><be>
 
-3. Deploy inference endpoints. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other LLMs as you wish.
+3. Select a model. We will use the model <a href="https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct">meta-llama/Llama-3.2-3B-Instruct</a> (just for example). You can choose other models from <a href="https://huggingface.co/models?other=conversational,endpoints_compatible&sort=trending">this list of HuggingFace models</a>
 ![image03](https://github.com/user-attachments/assets/36dc85d7-8766-43fc-97af-dc921d10cdc4)
 <br><be>
 
-4. Create endpoint. You need to bind a credit card to your account to use the model deployment service on HuggingFace. Then select the corresponding options according to your needs. The estimated cost is shown in the bottom right corner. If you select ‘Never automatically scale to zero’, remember to pause the model when you are not using it or it will keep charging.
+4. Create an Endpoint. Add a credit card to access HuggingFace's model deployment service, then configure options based on your needs. The estimated cost is displayed at the bottom right corner—if you select ‘Never automatically scale to zero,’ pause the model when not in use to avoid charges.
 ![image04](https://github.com/user-attachments/assets/09060933-2a13-4172-bb0d-5297458ba756)
 <br><be>
 
-5. Wait for model initialisation to complete. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
+5. Initialisation. The model usually takes a few minutes to initialize; Once it's ready you can use it normally.
 ![image05](https://github.com/user-attachments/assets/74aae84a-e213-4624-98ba-16fb80323811)
 <br><be>
 
-6. Now the model works fine, and you may notice that the Endpoint URL has been updated, which we'll use later.
+6. Once initialized, confirm that the Endpoint URL has been updated—it will be needed later.
 ![image06](https://github.com/user-attachments/assets/dd3a4162-af93-4944-84a7-8e4e7cef94ba)
 <br><br>
 ![image07](https://github.com/user-attachments/assets/653fade9-6370-4fda-a875-6828aa2b78e0)
@@ -221,11 +225,10 @@ Note that you will receive an email in which you will need to click on the confi
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
 <br><br>
-In this demo, we'll use `meta-llama/Llama-3.2-3B-Instruct` as the model ID. Or you can try selecting a free model one by one from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families).
+In this demo, we'll use `meta-llama/Llama-3.2-3B-Instruct` as the model ID. You can choose other models from <a href="https://huggingface.co/models?other=conversational,endpoints_compatible&sort=trending">this list of HuggingFace models</a>
 <br><br>
-As we just mentioned, `YOUR_ENDPOINT_URL` refers to the Endpoint_URL generated when the model is run. Since the interaction property of the model is ‘chat_completion’, we should add `/v1/chat/completions` to the end of the URL.
+As mentioned earlier, `YOUR_ENDPOINT_URL` is the Endpoint_URL generated when running the model. Since the model's interaction property is 'chat_completion,' append `/v1/chat/completions` to the URL.
 <br><br>
-If you have questions about the format `/v1/chat/completions` at the end, check out the MacBehaviour source code <a href="https://github.com/xufengduan/MacBehaviour/blob/c30b1e4388ed19a1dce611bf71bc703dc4bb0c2e/R/tools.R#L206">here</a>, as this is the default suffix set by the setKey function for the chat_completion model.
 
 ```R
 setKey(api_key = "YOUR_API_KEY", model = "meta-llama/Llama-3.2-3B-Instruct", api_url = "YOUR_ENDPOINT_URL")
