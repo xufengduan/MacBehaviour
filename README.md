@@ -31,21 +31,21 @@ Please pilot test your experiment before running it, as we are not responsible f
   
   
 ## News
-
-2024-Oct-16: Package paper accepted by Behavior Research Methods.<br>
+2024-Dec-13: Support Hugging Face Endpoint for 8,000+ conversational models<br>
+2024-Oct-16: Package paper accepted by <i>Behavior Research Methods</i>.<br>
 2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face via Message API.<br>
 2024-July-2: Support models on Qianfan Baidu.<br>
 
 ## Table of Contents
 - [Supported Model Platforms](#supported-model-platforms)
 - [Supported Models](#supported-models)
-- [Note](#note)
-- [Frequently Asked Questions](#Frequently-Asked-Questions)
+- [Note for researchers from Mainland China, 中国大陆研究人员提示](#note)
+- [Frequently Asked Questions](#frequently-asked-questions)
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
-- ⭐️[Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)
+- ⭐️[Demo Code - Qianfan Baidu](#demo-code---qianfan-baidu)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
   - [2. Experiment Design](#2-experiment-design)
@@ -78,6 +78,7 @@ If you prefer using cloud-based models, this package currently supports the foll
 | BaiChuan family  (7B, 13B et al)                          | Baichuan (Yang et al., 2023)      |
 | 50+  other self-hosted LLMs  (e.g.,  Vicuna, FastChat-T5) | FastChat (Zheng  et al., 2023)    |
 | 200+ other cloud-hosted LLMs	                            | AI/ML API (AI/ML API, 2024)       |
+| 8,000+ cloud-hosted LLMs on Hugging Face                  | Hugging Face Endpoint             |
 
 ## Frequently Asked Questions
 `Q1: How to convert log-probabilities to probabilities in both R and Excel`<br>
@@ -156,7 +157,7 @@ library("MacBehaviour")
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
 <br><br>
-For the model ID, you can use `Qwen/Qwen2.5-72B-Instruct` (currently free). If it doesn't work, try selecting a free model one by one from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families).
+For the model ID, you can use `Qwen/Qwen2.5-72B-Instruct` (currently free). If it doesn't work, try selecting a free model one by one from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families). Also you can deploy models on cloud GPU server(Endpoint) with 8,000+ more options, [see here](#demo-code---hugging-face-endpoint).
 ```R
 setKey(api_key = "your_api_key_here", model = "Qwen/Qwen2.5-72B-Instruct")
 ```
@@ -185,7 +186,7 @@ runExperiment(gptConfig, savePath = "demo_results.csv")
 
 If you want to deploy models not currently supported by the Hugging Face Inference API, you can use the Endpoint service.
 
-This service supports over 100 Hugging Face models, allowing deployment on cloud GPUs and experimentation via the endpoint API.
+This service supports over 8,000 <a href="https://huggingface.co/models?other=conversational,endpoints_compatible&sort=trending">Hugging Face models</a>, allowing deployment on cloud GPUs and experimentation via the Endpoint API.
 
 Here, we’ll walk through the setup process.
 
