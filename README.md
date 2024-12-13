@@ -39,7 +39,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 ## Table of Contents
 - [Supported Model Platforms](#supported-model-platforms)
 - [Supported Models](#supported-models)
-- [Note for researchers from Mainland China, 中国大陆研究人员提示](#note)
+- [中国大陆研究人员提示](#note)
 - [Frequently Asked Questions](#frequently-asked-questions)
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
