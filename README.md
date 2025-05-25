@@ -324,9 +324,9 @@ library("MacBehaviour")
 ```
 
 2. Apply for an API key
-You will need a DeepSeek API key to authenticate your requests. Register and create your key at [here](https://platform.deepseek.com/)
+You will need a DeepSeek API key to authenticate your requests. Register and create your key at [here](https://platform.deepseek.com/).
 
-Once you receive your key, replace "your_api_key_here" in the next step.
+You might need to top up before using the API key at [here](https://platform.deepseek.com/top_up). Once you receive your key, replace "your_api_key_here" in the next step.
 
 3. Communicate with one LLM
 ```R
