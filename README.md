@@ -31,6 +31,7 @@ Please pilot test your experiment before running it, as we are not responsible f
   
   
 ## News
+2025-May-25: Support DeepSeek offical API.<br>
 2024-Dec-13: Support Hugging Face Endpoint for 8,000+ conversational models<br>
 2024-Oct-16: Package paper accepted by <i>Behavior Research Methods</i>.<br>
 2024-Sep-5: Support logging Logprobs for Chat models on Hugging Face via Message API.<br>
@@ -45,6 +46,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
+- ⭐️[Demo Code - DeepSeek](#demo-code---deepseek)
 - ⭐️[Demo Code - Qianfan Baidu](#demo-code---qianfan-baidu)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
@@ -61,11 +63,12 @@ If you prefer using cloud-based models, this package currently supports the foll
 
 1. [OpenAI](https://platform.openai.com/)
 2. [Hugging Face](https://huggingface.co/)
-3. [Claude](https://www.anthropic.com/api)
-4. [Gemini](https://ai.google.dev/)
-5. [Qianfan Baidu](https://qianfan.cloud.baidu.com/)
-6. [Baichuan](https://platform.baichuan-ai.com/)
-7. [AI/ML](https://aimlapi.com/)
+3. [DeepSeek](https://platform.deepseek.com/)
+4. [Claude](https://www.anthropic.com/api)
+5. [Gemini](https://ai.google.dev/)
+6. [Qianfan Baidu](https://qianfan.cloud.baidu.com/)
+7. [Baichuan](https://platform.baichuan-ai.com/)
+8. [AI/ML](https://aimlapi.com/)
 
 ## Supported Models
 
@@ -307,6 +310,67 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 ```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
+
+## Demo Code - DeepSeek
+
+This demonstration illustrates how to connect and run experiments using DeepSeek, an independent LLM provider that supports OpenAI-style chat APIs. You can run models such as deepseek-chat and deepseek-reasoner through the official endpoint with minimal configuration.
+
+
+1. Install and load the package
+```R
+install.packages("devtools")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+library("MacBehaviour")
+```
+
+2. Apply for an API key
+You will need a DeepSeek API key to authenticate your requests. Register and create your key at [here](https://platform.deepseek.com/)
+
+Once you receive your key, replace "your_api_key_here" in the next step.
+
+3. Communicate with one LLM
+```R
+setKey(api_key = "your_api_key_here", model = "deepseek-chat", api_url = "https://api.deepseek.com/chat/completions")
+```
+
+The model parameter should be either:
+	•	"deepseek-chat" – corresponds to DeepSeek-V3
+	•	"deepseek-reasoner" – corresponds to DeepSeek-R1
+
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode  
+Setup Successful  Model - deepseek-chat
+```
+You can check the model and price details at [here](https://platform.deepseek.com/api_keys).
+
+4. Load your data
+Prepare your experimental stimuli in an Excel or CSV file. A demo file is available at <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>.
+```R
+df <- read.xlsx("./Data_OTPR.xlsx")
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
+
+5. Set experimental design
+```R
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
+
+6. Configure model parameters
+```R
+gptConfig <- preCheck(
+  data = Design,
+  systemPrompt = "You are a participant in a psychology experiment.",
+  max_tokens = 500,
+  n = 1)
+```
+Parameter definitions and full API documentation are available at [here](https://api-docs.deepseek.com/api/create-chat-completion).
+
+7. Run the experiment
+```R
+runExperiment(gptConfig, savePath = "deepseek_results.csv")
+```
+
 
 ## Demo Code - Qianfan Baidu
 
