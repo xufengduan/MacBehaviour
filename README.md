@@ -160,7 +160,7 @@ library("MacBehaviour")
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
 <br><br>
-For the model ID, you can use `Qwen/Qwen2.5-72B-Instruct` (currently free). If it doesn't work, try selecting a free model one by one from <a href="https://huggingface.co/models?inference=warm&other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families). Also you can deploy models on cloud GPU server(Endpoint) with 8,000+ more options, [see here](#demo-code---hugging-face-endpoint).
+For the model ID, you can use `Qwen/Qwen2.5-72B-Instruct`. If it doesn't work, try selecting a model one by one from <a href="https://huggingface.co/models?other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families). Also you can deploy models on cloud GPU server(Endpoint) with 8,000+ more options, [see here](#demo-code---hugging-face-endpoint).
 ```R
 setKey(api_key = "your_api_key_here", model = "Qwen/Qwen2.5-72B-Instruct")
 ```
