@@ -42,10 +42,10 @@ Please pilot test your experiment before running it, as we are not responsible f
 - [Supported Models](#supported-models)
 - [中国大陆研究人员提示](#note)
 - [Frequently Asked Questions](#frequently-asked-questions)
+- ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
-- ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Demo Code - DeepSeek](#demo-code---deepseek)
 - ⭐️[Demo Code - Qianfan Baidu (legacy)](#demo-code---qianfan-baidu)
 - [Tutorial](#tutorial)
@@ -142,6 +142,128 @@ Upon the successful installation, users can load this package into the current R
 ``` R
 library("MacBehaviour")
 ```
+
+## ⭐️ Demo Code Free OpenAI-Compatible API
+
+As of now, [Chutes.ai](https://chutes.ai/) offers **free access** to selected LLMs through an OpenAI-compatible API interface. You can experiment with powerful models such as **DeepSeek-V3** without incurring cost.
+
+> ✅ *Note: Free access may change in the future. Always check their updated information.*
+
+### 1. Register and Obtain Your API Key
+
+* Visit: [https://chutes.ai/auth/start](https://chutes.ai/auth/start)
+* After logging in, go to API Key page to create and copy your token.
+* ![image](https://github.com/user-attachments/assets/36097e79-99a5-4ffe-99c1-cdebfaaaf31d)
+
+
+---
+
+### 2. Find Your Model & Endpoint URL
+
+* Browse available models (e.g., [DeepSeek-V3](https://chutes.ai/app/chute/154ad01c-a431-5744-83c8-651215124360?tab=api))
+* Note the **Endpoint URL** and **Model ID**, e.g.:
+
+```plaintext
+Model: deepseek-ai/DeepSeek-V3-0324  
+URL:   https://llm.chutes.ai/v1/chat/completions
+```
+
+---
+
+### 3. Set Up in MacBehaviour
+
+1. Setup communication 
+```r
+setKey(
+  api_key = "YOUR_API_KEY",
+  model = "deepseek-ai/DeepSeek-V3-0324",
+  api_url = "https://llm.chutes.ai/v1/chat/completions"
+)
+```
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode  
+Setup Successful  Model - deepseek-chat
+```
+
+2. Load Data: organizes your experimental data from a data frame.
+<br><br>
+You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
+
+```R
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
+4. Set Experimental Design.
+```R
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
+5. Configures model parameters.
+You can find more parameters <a href = "https://platform.openai.com/docs/api-reference/chat/create">here</a>.
+```R
+gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+```
+6. Run the Experiment.
+```R
+runExperiment(gptConfig, savePath = "demo_results.csv")
+```
+
+---
+
+### 4. Proceed with Your Experiment (Data → Design → Config → Run)
+
+This setup works identically to other OpenAI-compatible services like DeepSeek or Fireworks. For full examples, see [Demo Code – Universal OpenAI API-Compatible Platforms](#demo-code--universal-openai-api-compatible-platforms).
+
+
+## Demo Code - OpenAI
+
+This script provides an example of how to use OpenAI models with the MacBehaviour package.
+
+If you want to learn more about this package, please refer to the [tutorial](#tutorial).
+
+1. Install and load the package. you can skip it if you have already done it.
+```R
+install.packages("devtools")
+devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
+library("MacBehaviour")
+```
+2. Communicate with one LLM: authenticates API access for the models you are working with.
+<br><br>
+Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
+<br><br>
+For the model ID, you can use `gpt-3.5-turbo` or choose from <a href="https://platform.openai.com/docs/models">this list of OpenAI models</a>.
+```R
+setKey(api_key = "your_api_key_here", model = "gpt-3.5-turbo")
+```
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode  
+Setup Successful  Model - deepseek-chat
+```
+
+3. Load Data: organizes your experimental data from a data frame.
+<br><br>
+You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
+
+```R
+df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+```
+4. Set Experimental Design.
+```R
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+```
+5. Configures model parameters.
+You can find more parameters <a href = "https://platform.openai.com/docs/api-reference/chat/create">here</a>.
+```R
+gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+```
+6. Run the Experiment.
+```R
+runExperiment(gptConfig, savePath = "demo_results.csv")
+```
+
+
 ## Demo Code - Hugging Face
 
 We have provided two demonstration scripts for you to try: one for models hosted on Hugging Face and another for models from OpenAI.
@@ -156,6 +278,7 @@ install.packages("devtools")
 devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
 library("MacBehaviour")
 ```
+
 2. Communicate with one LLM.
 <br><br>
 Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
@@ -163,6 +286,11 @@ Replace `YOUR_API_KEY` to you personal API key. For more information on obtainin
 For the model ID, you can use `Qwen/Qwen2.5-72B-Instruct`. If it doesn't work, try selecting a model one by one from <a href="https://huggingface.co/models?other=conversational,text-generation-inference&sort=trending">this list of HuggingFace models</a>. You might need to <a href="https://huggingface.co/subscribe/pro">subscribe PRO</a> for access to more advanced models(e.g., Llama 3.2 families). Also you can deploy models on cloud GPU server(Endpoint) with 8,000+ more options, [see here](#demo-code---hugging-face-endpoint).
 ```R
 setKey(api_key = "your_api_key_here", model = "Qwen/Qwen2.5-72B-Instruct")
+```
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode  
+Setup Successful  Model - deepseek-chat
 ```
 
 3. Load Data: organizes your experimental data from a data frame.
@@ -235,6 +363,12 @@ As mentioned earlier, `YOUR_ENDPOINT_URL` is the Endpoint_URL generated when run
 setKey(api_key = "YOUR_API_KEY", model = "meta-llama/Llama-3.2-3B-Instruct", api_url = "YOUR_ENDPOINT_URL")
 ```
 
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode  
+Setup Successful  Model - deepseek-chat
+```
+
 8. Load Data: organizes your experimental data from a data frame.
 <br><br>
 You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
@@ -268,48 +402,6 @@ View(results)
 ![image09](https://github.com/user-attachments/assets/37734b85-65d8-4a44-912a-6e0777ba19b0)
 
 
-## Demo Code - OpenAI
-
-This script provides an example of how to use OpenAI models with the MacBehaviour package.
-
-If you want to learn more about this package, please refer to the [tutorial](#tutorial).
-
-1. Install and load the package. you can skip it if you have already done it.
-```R
-install.packages("devtools")
-devtools::install_github("xufengduan/MacBehaviour", upgrade = "never")
-library("MacBehaviour")
-```
-2. Communicate with one LLM: authenticates API access for the models you are working with.
-<br><br>
-Replace `YOUR_API_KEY` to you personal API key. For more information on obtaining API keys for different platforms, refer to this <a href="https://github.com/xufengduan/MacBehaviour/blob/main/Materials/get_api_keys.md">documentation</a>.
-<br><br>
-For the model ID, you can use `gpt-3.5-turbo` or choose from <a href="https://platform.openai.com/docs/models">this list of OpenAI models</a>.
-```R
-setKey(api_key = "your_api_key_here", model = "gpt-3.5-turbo")
-```
-
-3. Load Data: organizes your experimental data from a data frame.
-<br><br>
-You can find the demo data <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/Data_OTPR.xlsx">here</a>. If you want to learn more details, please refer to this [tutorial](#tutorial)
-
-```R
-df <- read.xlsx("./Data_OTPR.xlsx")  # Load your data file
-ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
-```
-4. Set Experimental Design.
-```R
-Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
-```
-5. Configures model parameters.
-You can find more parameters <a href = "https://platform.openai.com/docs/api-reference/chat/create">here</a>.
-```R
-gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
-```
-6. Run the Experiment.
-```R
-runExperiment(gptConfig, savePath = "demo_results.csv")
-```
 
 ## Demo Code - DeepSeek
 
@@ -402,6 +494,11 @@ The string following "chat/" (underlined in the picture) is the model ID.
 
 ```r
 setKey(api_key = "your_api_key_here", secret_key = "your_secret_key_here", model = "yi_34b_chat")
+```
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode  
+Setup Successful  Model - deepseek-chat
 ```
 
 3. Load Data: organizes your experimental data from a data frame.
