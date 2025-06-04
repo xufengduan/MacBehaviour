@@ -42,12 +42,13 @@ Please pilot test your experiment before running it, as we are not responsible f
 - [Supported Models](#supported-models)
 - [中国大陆研究人员提示](#note)
 - [Frequently Asked Questions](#frequently-asked-questions)
-- ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Installation](#installation)
+- ⭐️[Demo Code – Free API](#demo-code---free-openai-compatible-api)
+- ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
 - ⭐️[Demo Code - DeepSeek](#demo-code---deepseek)
-- ⭐️[Demo Code - Qianfan Baidu (legacy)](#demo-code---qianfan-baidu)
+- [Demo Code - Qianfan Baidu (legacy)](#demo-code---qianfan-baidu)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
   - [2. Experiment Design](#2-experiment-design)
@@ -143,43 +144,55 @@ Upon the successful installation, users can load this package into the current R
 library("MacBehaviour")
 ```
 
-## ⭐️ Demo Code Free OpenAI-Compatible API
+## Demo Code - Free API
 
 As of now, [Chutes.ai](https://chutes.ai/) offers **free access** to selected LLMs through an OpenAI-compatible API interface. You can experiment with powerful models such as **DeepSeek-V3** without incurring cost.
 
 > ✅ *Note: Free access may change in the future. Always check their updated information.*
 
-### 1. Register and Obtain Your API Key
+### Register and Obtain Your API Key
 
 * Visit: [https://chutes.ai/auth/start](https://chutes.ai/auth/start)
 * After logging in, go to API Key page to create and copy your token.
 * ![image](https://github.com/user-attachments/assets/36097e79-99a5-4ffe-99c1-cdebfaaaf31d)
 
 
----
-
 ### 2. Find Your Model & Endpoint URL
 
 * Browse available models (e.g., [DeepSeek-V3](https://chutes.ai/app/chute/154ad01c-a431-5744-83c8-651215124360?tab=api))
-* Note the **Endpoint URL** and **Model ID**, e.g.:
+
+You will see an example of a curl call.
+
+``` bash
+curl -X POST \
+  https://llm.chutes.ai/v1/chat/completions \
+  -H "Authorization: Bearer $CHUTES_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "deepseek-ai/DeepSeek-V3-0324",
+    ...
+}'
+
+```
+* Note the **Model name** and  **Model URL**, e.g.:
 
 ```plaintext
-Model: deepseek-ai/DeepSeek-V3-0324  
-URL:   https://llm.chutes.ai/v1/chat/completions
+Model name: deepseek-ai/DeepSeek-V3-0324  
+Model URL:   https://llm.chutes.ai/v1/chat/completions
 ```
 
----
 
-### 3. Set Up in MacBehaviour
+### Set Up in MacBehaviour
 
 1. Setup communication 
 ```r
 setKey(
   api_key = "YOUR_API_KEY",
-  model = "deepseek-ai/DeepSeek-V3-0324",
-  api_url = "https://llm.chutes.ai/v1/chat/completions"
+  model = "MODEL_NAME",
+  api_url = "MODEL_URL"
 )
 ```
+
 If everything is configured correctly, you should see the following confirmation:
 ```
 chat completion mode  
@@ -209,10 +222,6 @@ runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
 
 ---
-
-### 4. Proceed with Your Experiment (Data → Design → Config → Run)
-
-This setup works identically to other OpenAI-compatible services like DeepSeek or Fireworks. For full examples, see [Demo Code – Universal OpenAI API-Compatible Platforms](#demo-code--universal-openai-api-compatible-platforms).
 
 
 ## Demo Code - OpenAI
