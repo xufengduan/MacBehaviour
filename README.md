@@ -31,6 +31,7 @@ Please pilot test your experiment before running it, as we are not responsible f
   
   
 ## News
+2025-June-4: Chutes.ai now provides free access to selected models such as DeepSeek-V3. See [Demo Code](#demo-code---free-openai-compatible-api).
 2025-May-25: Support DeepSeek offical API.<br>
 2024-Dec-13: Support Hugging Face Endpoint for 8,000+ conversational models<br>
 2024-Oct-16: Package paper accepted by <i>Behavior Research Methods</i>.<br>
@@ -43,7 +44,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 - [中国大陆研究人员提示](#note)
 - [Frequently Asked Questions](#frequently-asked-questions)
 - ⭐️[Installation](#installation)
-- ⭐️[Demo Code – Free API](#demo-code---free-openai-compatible-api)
+- ⭐️[Demo Code – Free API](#demo-code---free-api)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
@@ -182,7 +183,9 @@ Model URL:   https://llm.chutes.ai/v1/chat/completions
 ```
 
 
-### Set Up in MacBehaviour
+### Set up in MacBehaviour
+
+Please [install](#installation) the package first.
 
 1. Setup communication 
 ```r
