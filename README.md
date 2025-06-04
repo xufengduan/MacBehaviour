@@ -23,7 +23,7 @@ The `MacBehaviour`(short for Machine Behaviour) R package offers a user-friendly
 
 **Since Hugging Face offers free inference services for certain models, you can begin experimenting with this package via [Demo Code - HuggingFace](#demo-code---hugging-face).**
 
-For details and citation, please see the paper: <a href="=https://doi.org/10.3758/s13428-024-02524-y"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. <i>Behavior Research Methods</i>, 57(1), 19.</a>
+For details and citation, please see the paper: <a href="https://doi.org/10.3758/s13428-024-02524-y"> Duan, X., Li, S., & Cai, Z. G. (2024). MacBehaviour: An R package for behavioural experimentation on large language models. <i>Behavior Research Methods</i>, 57(1), 19.</a>
 
 Please pilot test your experiment before running it, as we are not responsible for any potential losses incurred.
 
@@ -112,7 +112,7 @@ Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
 ```
 其中XXXX为代理端口号，了解 <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/proxy_issue.md">如何获得端口号</a>。<br>
 
-可以查看 [Demo Code - Qianfan Baidu](#Demo-Code---Qianfan-Baidu)。千帆平台除了文心模型以外，还支持一些开源模型，并且提供免费的api调用。但需要提前一天注册，才能使用免费模型。<br><br>
+之后，建议Deepseek官方API进行pilot实验。该模型支持中文并且开源。更多细节，可以查看 [DeepSeek](https://platform.deepseek.com/)。<br><br>
 
 
 
