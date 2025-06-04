@@ -112,7 +112,7 @@ Sys.setenv(https_proxy = "http://127.0.0.1:XXXX")
 ```
 其中XXXX为代理端口号，了解 <a href = "https://github.com/xufengduan/MacBehaviour/blob/main/Materials/proxy_issue.md">如何获得端口号</a>。<br>
 
-之后，建议Deepseek官方API进行pilot实验。该模型支持中文并且开源。更多细节，可以查看 [DeepSeek](https://platform.deepseek.com/)。<br><br>
+之后，建议Deepseek官方API进行pilot实验。该模型支持中文并且开源。更多细节，可以查看 [Demo Code - DeepSeek](#demo-code---deepseek)。<br><br>
 
 
 
