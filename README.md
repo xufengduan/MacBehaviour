@@ -47,7 +47,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
 - ⭐️[Demo Code - DeepSeek](#demo-code---deepseek)
-- ⭐️[Demo Code - Qianfan Baidu](#demo-code---qianfan-baidu)
+- ⭐️[Demo Code - Qianfan Baidu (legacy)](#demo-code---qianfan-baidu)
 - [Tutorial](#tutorial)
   - [1. Communicate with Models](#1-communicate-with-models)
   - [2. Experiment Design](#2-experiment-design)
@@ -373,6 +373,10 @@ runExperiment(gptConfig, savePath = "deepseek_results.csv")
 
 
 ## Demo Code - Qianfan Baidu
+
+```
+Note: MacBehaviour currently supports only Qianfan's legacy v1 API (access_token-based), which works for models like `yi_34b_chat` and `ernie_speed`. For newer models (e.g., `deepseek-v3`, `qwen-plus`), please use the provider's official API directly or another supported platform such as [Deepseek](#demo-code---deepseek) or others.
+```
 
 This is a demo code for models hosted on Baidu's Qianfan platform. You can begin by experimenting with free models such as `yi_34b_chat`/`ernie_speed`, or choose from other models like the Meta-Llama and Mixtral families.
 
