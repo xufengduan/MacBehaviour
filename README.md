@@ -55,6 +55,7 @@ Please pilot test your experiment before running it, as we are not responsible f
   - [2. Experiment Design](#2-experiment-design)
   - [3. Demo Experiments](#3-demo-experiments)
   - [4. Result Structure](#4-result-structure)
+- [Solution for Multi-Event Item Design (e.g., Priming Experiments)](#solution-for-multi-event-item-design-eg-priming-experiments)
 
 
 ## Supported Model Platforms
@@ -849,4 +850,37 @@ Upon the completion of the experiment, the responses are compiled into a file. T
 
 </div>
 
-### 
+## 🔹 Solution for Multi-Event Item Design (e.g., Priming Experiments)
+
+For **syntactic priming experiments**, it is common that **the same item within a run contains multiple stimuli**, typically a *prime* followed by a *target*. In such cases, both stimuli need to be sent to the model in a controlled order.
+
+MacBehaviour supports this design in two ways.
+
+#### Option 1: Combine Prime and Target into One Prompt
+
+One simple approach is to combine the prime and target preambles into a **single prompt**, letting the model complete both sentences within one trial. This approach is suitable when the prime and target are tightly coupled and do not need to be analyzed separately.
+
+#### Option 2: Use an `Event` Column (Recommended for Priming)
+
+Alternatively, you can treat the prime and target as **separate events** within the same run and item by adding an `Event` column to your CSV/Excel file.
+
+Even if both stimuli belong to the same `Run` and `Item`, they should have **different Event IDs**, for example:
+
+| Run  | Item | Event | Condition | Prompt                 |
+| ---- | ---- | ----- | --------- | ---------------------- |
+| 1    | 1    | 1     | Prime     | The teacher gave …     |
+| 1    | 1    | 2     | Target    | The student received … |
+
+When loading the data, make sure to include `eventList` in `loadData`:
+
+```r
+ExperimentItem <- loadData(
+  runList       = df$Run,
+  itemList      = df$Item,
+  conditionList = df$Condition,
+  promptList    = df$Prompt,
+  eventList     = df$Event
+)
+```
+
+The `Event` variable ensures that **both prime and target are sent sequentially within the same conversation**, allowing the model to learn from the immediately preceding prime when completing the target.
