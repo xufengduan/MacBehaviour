@@ -850,7 +850,7 @@ Upon the completion of the experiment, the responses are compiled into a file. T
 
 </div>
 
-## 🔹 Solution for Multi-Event Item Design (e.g., Priming Experiments)
+## Solution for Multi-Event Item Design (e.g., Priming Experiments)
 
 For **syntactic priming experiments**, it is common that **the same item within a run contains multiple stimuli**, typically a *prime* followed by a *target*. In such cases, both stimuli need to be sent to the model in a controlled order.
 
