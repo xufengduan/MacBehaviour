@@ -260,6 +260,14 @@ setKey <- function(api_key,model,api_url = NULL,...){
       else if(grepl("gemini",tolower(model))){
         Sys.setenv(llm="gemini")
       }
+      else if(grepl("openrouter",tolower(model)) || (!is.null(api_url) && grepl("openrouter",tolower(api_url)))){
+        Sys.setenv(llm="openai")
+        if (is.null(api_url)) {
+          Sys.setenv(url = "https://openrouter.ai/api/v1/chat/completions")
+        } else {
+          Sys.setenv(url = api_url)
+        }
+      }
       
       else{
         Sys.setenv(llm="custom")

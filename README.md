@@ -46,6 +46,7 @@ Please pilot test your experiment before running it, as we are not responsible f
 - ⭐️[Installation](#installation)
 - ⭐️[Demo Code – Free API](#demo-code---free-api)
 - ⭐️[Demo Code - OpenAI](#demo-code---openai)
+- ⭐️[Demo Code - OpenRouter](#demo-code---openrouter)
 - ⭐️[Demo Code - HuggingFace](#demo-code---hugging-face)
 - ⭐️[Demo Code - HuggingFace Endpoint](#demo-code---hugging-face-endpoint)
 - ⭐️[Demo Code - DeepSeek](#demo-code---deepseek)
@@ -65,13 +66,14 @@ This package enables local deployment of LLMs through **FastChat** (https://gith
 If you prefer using cloud-based models, this package currently supports the following platforms:
 
 1. [OpenAI](https://platform.openai.com/)
-2. [Hugging Face](https://huggingface.co/)
-3. [DeepSeek](https://platform.deepseek.com/)
-4. [Claude](https://www.anthropic.com/api)
-5. [Gemini](https://ai.google.dev/)
-6. [Qianfan Baidu](https://qianfan.cloud.baidu.com/)
-7. [Baichuan](https://platform.baichuan-ai.com/)
-8. [AI/ML](https://aimlapi.com/)
+2. [OpenRouter](https://openrouter.ai/)
+3. [Hugging Face](https://huggingface.co/)
+4. [DeepSeek](https://platform.deepseek.com/)
+5. [Claude](https://www.anthropic.com/api)
+6. [Gemini](https://ai.google.dev/)
+7. [Qianfan Baidu](https://qianfan.cloud.baidu.com/)
+8. [Baichuan](https://platform.baichuan-ai.com/)
+9. [AI/ML](https://aimlapi.com/)
 
 ## Supported Models
 
@@ -275,6 +277,74 @@ gptConfig <- preCheck( data = Design, systemPrompt = "You are a participant in a
 ```R
 runExperiment(gptConfig, savePath = "demo_results.csv")
 ```
+
+
+## Demo Code - OpenRouter
+
+[OpenRouter](https://openrouter.ai/) provides unified access to hundreds of AI models through a single API endpoint. It automatically handles fallbacks and helps you find the most cost-effective options across different providers.
+
+If you want to learn more about this package, please refer to the [tutorial](#tutorial).
+
+### 1. Register and Obtain Your API Key
+
+* Visit: [https://openrouter.ai/keys](https://openrouter.ai/keys)
+* Create a new API key and copy it
+
+### 2. Choose Your Model
+
+OpenRouter supports hundreds of models. You can browse available models at [https://openrouter.ai/models](https://openrouter.ai/models).
+
+Some popular models include:
+- `openai/gpt-4o` - OpenAI GPT-4 Omni
+- `anthropic/claude-3.5-sonnet` - Anthropic Claude 3.5 Sonnet
+- `google/gemini-1.5-pro` - Google Gemini 1.5 Pro
+- `meta-llama/llama-3.1-70b-instruct` - Meta Llama 3.1
+- `deepseek/deepseek-chat` - DeepSeek Chat
+
+> **Note**: Model names on OpenRouter follow the format `provider/model-name` (e.g., `openai/gpt-4o`, `anthropic/claude-3.5-sonnet`).
+
+### 3. Setup in MacBehaviour
+
+Please [install](#installation) the package first.
+
+1. Setup communication:
+```r
+setKey(
+  api_key = "YOUR_OPENROUTER_API_KEY",
+  model = "anthropic/claude-3.5-sonnet",
+  api_url = "https://openrouter.ai/api/v1/chat/completions"
+)
+```
+
+If everything is configured correctly, you should see the following confirmation:
+```
+chat completion mode
+Setup Successful  Model - anthropic/claude-3.5-sonnet
+```
+
+### 4. Load Data and Run Experiment
+
+Once the API is configured, you can proceed with the remaining steps just like with any other model:
+
+```r
+# Load your experimental data
+df <- read.xlsx("./Data_OTPR.xlsx")
+ExperimentItem <- loadData(runList = df$Run, itemList = df$Item, conditionList = df$Condition, promptList = df$Prompt)
+
+# Set Experimental Design
+Design <- experimentDesign(ExperimentItem, session = 1, randomItem = FALSE)
+
+# Configure model parameters
+gptConfig <- preCheck(data = Design, systemPrompt = "You are a participant in a psychology experiment.", max_tokens = 500)
+
+# Run the Experiment
+runExperiment(gptConfig, savePath = "demo_results_openrouter.csv")
+```
+
+> **Tips**:
+> - OpenRouter might provide free credits for new users to try different models
+> - You can compare prices across models before running large experiments
+> - The API format is fully compatible with OpenAI, so all existing parameters work the same way
 
 
 ## Demo Code - Hugging Face
